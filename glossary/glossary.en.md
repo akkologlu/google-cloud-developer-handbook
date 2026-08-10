@@ -1,6 +1,6 @@
 # Glossary (English)
 
-This glossary distills the terms, services, and concepts introduced across all 8 deep-dive modules into a quick reference. Entries are organized alphabetically. Each entry follows the format described in [glossary/README.md](README.md): Definition, Why it exists, Related services, Common misconceptions, Real-world analogy.
+This glossary distills the terms, services, and concepts introduced across all 11 deep-dive modules into a quick reference. Entries are organized alphabetically. Each entry follows the format described in [glossary/README.md](README.md): Definition, Why it exists, Related services, Common misconceptions, Real-world analogy.
 
 This is a reference, not a tutorial — for the full teaching context behind any entry, see the corresponding [deep-dive](../deep-dive) module.
 
@@ -416,6 +416,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 
 ---
 
+### Cloud Scheduler
+
+**Definition:** A fully managed, enterprise-grade cron job scheduler, managed from a single dashboard, that can trigger a Pub/Sub topic, an App Engine app, or a public HTTP endpoint on a recurring schedule.
+
+**Why it exists:** Recurring jobs (nightly batch runs, hourly syncs) need guaranteed execution and automatic retries on failure — running your own cron daemon on a VM means you also own patching, uptime, and monitoring for it.
+
+**Related services:** Cloud Tasks, Pub/Sub, App Engine.
+
+**Common misconceptions:** Cloud Scheduler's default time zone is UTC, and staying on UTC is recommended — time zones that observe daylight saving time can cause a job to be skipped (when clocks move forward) or run twice (when clocks move back).
+
+**Real-world analogy:** Cloud Scheduler is like a building's automated alarm system clock — it rings at the exact scheduled times regardless of who's around, and using one standard clock (UTC) for every branch office avoids the chaos of each location observing daylight saving differently.
+
+---
+
 ### Cloud Shell
 
 **Definition:** A free, browser-based, temporary Debian VM with a 5 GB persistent home directory, pre-installed and pre-authenticated with the Google Cloud SDK.
@@ -472,6 +486,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 
 ---
 
+### Cloud Tasks
+
+**Definition:** A service that manages the execution, dispatch, and delivery of large numbers of distributed tasks, each dispatched to a specific HTTP service, with configurable rate limits, retries, and scheduled dispatch times.
+
+**Why it exists:** An application often needs to offload a specific, known piece of slow work (generating a report, calling a third-party API) without blocking the main request, while keeping direct control over which service handles it and when.
+
+**Related services:** Pub/Sub, Cloud Scheduler, Eventarc.
+
+**Common misconceptions:** Cloud Tasks and Pub/Sub are conceptually similar (both do async message passing) but are not interchangeable: Cloud Tasks uses **explicit invocation** — the creator retains full control over execution and destination — while Pub/Sub uses **implicit invocation**, where publishing a message triggers whichever subscribers currently exist, with no control over who receives it.
+
+**Real-world analogy:** Cloud Tasks is like handing a specific letter to a specific courier with specific delivery instructions and a delivery time; Pub/Sub is like posting a public notice on a board — anyone currently interested can act on it, and you have no say over who that is.
+
+---
+
 ### Cloud Trace
 
 **Definition:** A distributed tracing system that collects and displays per-request latency data, showing how a request propagates through your application.
@@ -497,6 +525,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 **Common misconceptions:** Cloud Workstations is not the same as Cloud Shell — Cloud Shell is a quick, ephemeral, single-user management shell; Cloud Workstations is a standardized, persistent, team-wide development environment.
 
 **Real-world analogy:** If Cloud Shell is a hotel business center, Cloud Workstations is a company-provided, identically configured laptop issued to every employee.
+
+---
+
+### CloudEvents
+
+**Definition:** A CNCF standard specification providing a common metadata format for describing event data, used by Eventarc to deliver events consistently regardless of source.
+
+**Why it exists:** Event publishers historically each used their own custom formats, forcing consumers to write source-specific parsing code — a shared format lets the same event-handling logic work no matter where an event came from.
+
+**Related services:** Eventarc, Event, Event-Driven Architecture.
+
+**Common misconceptions:** CloudEvents is not Google-specific — it's a CNCF (Cloud Native Computing Foundation) standard with SDKs for many languages (Python, JavaScript, Java, Go, C#, Ruby, PHP), and its value is specifically in *not* being tied to any one source or vendor.
+
+**Real-world analogy:** CloudEvents is like a standardized shipping label format used by every carrier — no matter which company delivers the package, the label always has the same fields in the same place, so the receiving warehouse doesn't need a different intake process per carrier.
 
 ---
 
@@ -612,6 +654,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 
 ---
 
+### Enterprise Service Bus (ESB)
+
+**Definition:** A centralized messaging middleware component used in Service-Oriented Architecture (SOA) that handles connectivity, security, and message routing and transformation between services.
+
+**Why it exists:** SOA needed a way for many services — and even applications outside the organization — to integrate without each one hand-coding protocol and data transformations against every other one; the ESB centralizes that work.
+
+**Related services:** Service-Oriented Architecture (SOA), Microservices.
+
+**Common misconceptions:** The ESB doesn't eliminate integration complexity, it relocates it — SOA reduced complexity in individual services, but that complexity resurfaced as ESB integration work, typically owned by one central team, which became a bottleneck for shipping changes across every application.
+
+**Real-world analogy:** An ESB is like a single, centrally-run switchboard that every phone call in a large office must be routed through — efficient in theory, but every wiring change requires going through the switchboard operator, and any mistake there can drop calls for everyone.
+
+---
+
 ### Error Reporting
 
 **Definition:** A service that automatically detects, groups, and counts errors from running applications, using either explicit API reports or stack-trace pattern inference from logs.
@@ -623,6 +679,48 @@ This is a reference, not a tutorial — for the full teaching context behind any
 **Common misconceptions:** Enabling Error Reporting differs by environment: automatic on Cloud Run, requires the `cloud-platform` access scope on GKE, and requires the **Error Reporting Writer** IAM role on a Compute Engine VM's service account.
 
 **Real-world analogy:** Error Reporting is a customer complaints desk that automatically groups hundreds of complaints into the handful of root causes actually driving them, instead of showing you every ticket individually.
+
+---
+
+### Event
+
+**Definition:** A record of something that has happened (a login, a product added to a cart), treated as an immutable fact that can be generated without ever being consumed, and persisted and consumed multiple times, in parallel, by different services.
+
+**Why it exists:** Request/response calls expect an immediate reply and disappear once handled; applications also need a durable, replayable record of "what happened" that doesn't depend on anyone being ready to act on it right away.
+
+**Related services:** Event-Driven Architecture, Microservices.
+
+**Common misconceptions:** An event with zero current consumers is not automatically a bug — many producers don't know, or need to know, whether anything is consuming their events. Events also should not be edited or deleted after the fact; a correction should be expressed as a new event, not a modification of the old one.
+
+**Real-world analogy:** An event is a diary entry — once written, it's a permanent record of what happened at that moment. You don't go back and edit yesterday's entry to reflect what you later found out; you write a new entry instead.
+
+---
+
+### Event-Driven Architecture
+
+**Definition:** An architectural pattern where services communicate by producing and consuming events through an event intermediary, rather than calling each other directly.
+
+**Why it exists:** Point-to-point calls between microservices force every service to know how to reach every downstream service it depends on, which introduces coupling and can turn into an unmanageable "spider web" of communication as the number of services grows.
+
+**Related services:** Event, Microservices, Enterprise Service Bus (ESB).
+
+**Common misconceptions:** An event intermediary is not the same thing as an Enterprise Service Bus (ESB) — an ESB is a centralized SOA-era routing/transformation layer that became a bottleneck because every integration change had to go through it and its owning team; an event intermediary exists specifically to decouple producers from consumers (neither needs to know about the other, only the event's format) without recreating that kind of centralized bottleneck. Also, event-driven (asynchronous) processing is more resilient than synchronous request/response chains, not just "different" — a downed consumer in an event-driven system can simply fall behind and catch up via replay/redelivery, while a downed service in a synchronous chain can cascade failures back up the call stack.
+
+**Real-world analogy:** Synchronous request/response calls are like a row of dominoes — if one falls (fails), everything behind it falls too. Event-driven architecture is more like a set of mailboxes: a sender drops a letter in and moves on; if a recipient is away, the letter just waits until they're back, instead of the whole postal system grinding to a halt.
+
+---
+
+### Eventarc
+
+**Definition:** Google Cloud's fully managed eventing system that routes events from many GCP and third-party sources to targets using rule-based event triggers, delivered in the standard CloudEvents format.
+
+**Why it exists:** Wiring up event ingestion by hand for every possible source (parsing Cloud Audit Logs, managing topics/subscriptions, normalizing formats) is repetitive, error-prone work that Eventarc automates.
+
+**Related services:** Pub/Sub, CloudEvents, Event-Driven Architecture.
+
+**Common misconceptions:** Eventarc is not a Pub/Sub competitor — it uses Pub/Sub as its transport layer for reliability and observability, but automatically manages the underlying topics and subscriptions so the application only needs to accept the HTTP requests Eventarc sends. For sources without direct event support, Eventarc can generate events from Cloud Audit Logs entries instead of requiring custom polling code.
+
+**Real-world analogy:** Eventarc is like a universal event dispatcher that already speaks every source's native language and translates everything into one standard format before handing it to you — you only need to learn one language to listen to dozens of different systems.
 
 ---
 
@@ -892,6 +990,34 @@ This is a reference, not a tutorial — for the full teaching context behind any
 
 ---
 
+### Microservices
+
+**Definition:** A decentralized architectural style where an application is decomposed into separate, limited-scope services, each owning its own database and exposing an API used by other services.
+
+**Why it exists:** Monoliths become tightly coupled and hard to maintain as they grow, and SOA's shared Enterprise Service Bus (ESB) recreated a central bottleneck; microservices remove the shared middleware entirely so services can be built, deployed, and scaled independently.
+
+**Related services:** Monolith (Monolithic Application), Service-Oriented Architecture (SOA), Cloud Run, GKE.
+
+**Common misconceptions:** Microservices are not automatically the "better" or default starting point — designing service boundaries without domain expertise is one of the hardest parts of a new project, so starting with a modular monolith and migrating later is often the safer path. Microservices also trade compute latency (in-process calls become network calls) and add real operational burden (automated builds/tests/deploys, consistent logging and security, harder debugging across distributed logs) in exchange for independent deployability, technology freedom, and independent scaling.
+
+**Real-world analogy:** A microservices architecture is like a city of independent shops, each running its own till and stockroom and reachable by its own street address (API), instead of one giant department store where every register runs through the same central back office.
+
+---
+
+### Monolith (Monolithic Application)
+
+**Definition:** An application built as a single, self-contained codebase — UI, business logic, and data access all in one deployable unit, typically backed by one large relational database.
+
+**Why it exists:** It's the natural starting point for most applications: one codebase, one deployment, no distributed-systems overhead — simple until it isn't.
+
+**Related services:** Microservices, Service-Oriented Architecture (SOA).
+
+**Common misconceptions:** A monolith is not inherently "bad architecture" — if you don't yet understand your problem domain well enough to draw good service boundaries, deliberately starting with a (modular) monolith and migrating to microservices later, once you know more, is a legitimate and often recommended strategy.
+
+**Real-world analogy:** A monolith is a single department store where the checkout, inventory, and customer service desks all share the same back office — fast to open, but a renovation in one corner can knock out the whole building's wiring.
+
+---
+
 ### Multi-Region
 
 **Definition:** A configuration that replicates resources across multiple zones **in multiple regions**, rather than just multiple zones in one region.
@@ -1116,6 +1242,34 @@ This is a reference, not a tutorial — for the full teaching context behind any
 
 ---
 
+### Pub/Sub
+
+**Definition:** A fully managed, real-time messaging service that lets independent services or applications send and receive messages: a publisher sends a message to a topic, and it's delivered to a queue for each subscriber.
+
+**Why it exists:** Services in an event-driven or choreographed architecture need a durable, decoupled way to pass messages without the publisher knowing or caring who (if anyone) is listening.
+
+**Related services:** Eventarc, Event-Driven Architecture, Cloud Tasks.
+
+**Common misconceptions:** A message is only removed from a subscriber's queue after it's acknowledged — this guarantees **at-least-once** delivery (a message may be redelivered), not exactly-once. Also, a **pull subscription** has the subscriber poll for messages, while a **push subscription** has Pub/Sub automatically send messages to a configured endpoint — these are not the same mechanism.
+
+**Real-world analogy:** Pub/Sub is like a magazine subscription: the publisher writes and prints an issue once, and every current subscriber automatically gets their own copy — the publisher doesn't track or care how many subscribers exist or who they are.
+
+---
+
+### Push-Based Messaging vs. Polling
+
+**Definition:** Two ways a consumer can learn that new work is available: polling repeatedly asks a source whether anything new exists; push-based messaging automatically notifies the consumer when there's an event to consume.
+
+**Why it exists:** Continuously asking "is there anything new yet?" wastes network I/O and adds delay between when work becomes available and when it's actually picked up — push-based delivery avoids both costs.
+
+**Related services:** Event, Event-Driven Architecture.
+
+**Common misconceptions:** Polling isn't simply a "less advanced" version of push with no real downside — the module is explicit that polling typically increases network I/O and introduces unnecessary processing delay, which is why push-based messaging is the preferred model for event consumers.
+
+**Real-world analogy:** Polling is repeatedly calling a restaurant to ask "is my order ready yet?" Push-based messaging is the restaurant texting you the moment it's ready — you don't waste effort checking, and you find out as soon as there's something to act on.
+
+---
+
 ### Quotas (Rate and Allocation)
 
 **Definition:** Project-level limits that prevent runaway resource consumption. **Rate quotas** reset after a fixed time window (e.g., 3,000 API calls per 100 seconds); **allocation quotas** cap how many of a resource you can hold at once (e.g., 15 VPC networks per project).
@@ -1211,6 +1365,34 @@ This is a reference, not a tutorial — for the full teaching context behind any
 **Common misconceptions:** Downloaded service account keys are a significant risk (credential leakage, privilege escalation, identity masking) and are considered a **last resort** — attached service accounts, Workload Identity, or Workload Identity Federation are preferred, key-free alternatives.
 
 **Real-world analogy:** A service account is a robot employee — it has its own badge and its own limited set of door access, and it never calls in sick or needs a human to swipe it in.
+
+---
+
+### Service Choreography and Service Orchestration
+
+**Definition:** Two patterns for coordinating microservices. In **choreography**, each service works independently, reacting to events with no central source of truth. In **orchestration**, a central orchestrator controls all interactions between services.
+
+**Why it exists:** Coordinating communication between microservices is one of the hardest parts of a microservices architecture — some of the complexity that lived inside a monolith shifts into how services talk to each other, and these are the two basic ways to manage that.
+
+**Related services:** Event-Driven Architecture, Workflows, Eventarc.
+
+**Common misconceptions:** Neither pattern is a strictly "safer" default. Orchestration gives a high-level view of the process and easier troubleshooting, but the orchestrator is a single point of failure. Choreography avoids that single point of failure and fits decentralized teams/organizations well, but has no central source of truth, making the overall flow harder to understand, and makes visibility, error handling, and retries harder to get right.
+
+**Real-world analogy:** Choreography is like a choreographed dance — each dancer knows their part and performs it independently, with no one actively directing during the performance. Orchestration is like an orchestra — a conductor actively synchronizes every musician in real time.
+
+---
+
+### Service-Oriented Architecture (SOA)
+
+**Definition:** An architectural style that decomposes an application into reusable services, each performing a discrete business function, communicating over defined interfaces via messaging routed through a central Enterprise Service Bus (ESB).
+
+**Why it exists:** It was an attempt to fix monoliths — breaking a large, tightly coupled codebase into smaller, more loosely coupled, reusable services that smaller teams could own.
+
+**Related services:** Enterprise Service Bus (ESB), Monolith (Monolithic Application), Microservices.
+
+**Common misconceptions:** SOA is often assumed to have solved integration complexity outright — in practice it typically produced mixed results: services got smaller and more loosely coupled, but the complexity of connecting them didn't disappear, it moved into ESB integrations owned by a central team, which became the new bottleneck (and the reason microservices later dropped the shared ESB entirely).
+
+**Real-world analogy:** SOA is like several independent departments in a company that all communicate exclusively through one central mailroom — the departments themselves work fine on their own, but every interdepartmental request now depends on that one mailroom's throughput.
 
 ---
 
@@ -1365,6 +1547,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 **Common misconceptions:** These solve different problems — Peering connects two independent networks as equals; Shared VPC centralizes one network that other projects borrow, under IAM control.
 
 **Real-world analogy:** VPC Peering is like two neighboring apartment buildings agreeing to let residents use each other's courtyard. Shared VPC is like several buildings all connecting to one shared building manager's utilities.
+
+---
+
+### Workflows
+
+**Definition:** Google Cloud's fully managed orchestration platform for designing and deploying workflows that orchestrate GCP services and API calls into stateful, automated processes.
+
+**Why it exists:** It's the concrete implementation of the service-orchestration pattern — a central, observable source of truth for a business process, capable of holding state, retrying, polling, or waiting for up to a year, which makes genuinely long-running processes practical.
+
+**Related services:** Service Choreography and Service Orchestration, Eventarc, Cloud Tasks.
+
+**Common misconceptions:** Workflows and Eventarc are not competitors deployed for the same job — in practice they're often combined: Workflows handles orchestration *within* a service's own process, while Eventarc carries event triggers *between* independently orchestrated services (choreography across the boundaries).
+
+**Real-world analogy:** Workflows is like a project manager who holds the master checklist for a multi-step process, tracks exactly where things stand, retries a step that failed, and can pause and wait for days without losing their place.
 
 ---
 

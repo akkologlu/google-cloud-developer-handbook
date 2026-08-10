@@ -1,6 +1,6 @@
 # Sözlük (Türkçe)
 
-Bu sözlük, 8 deep-dive modülünün tamamında geçen terimleri, servisleri ve kavramları hızlı bir referansa dönüştürür. Girdiler alfabetik olarak düzenlenmiştir. Her girdi [glossary/README.md](README.md) dosyasında tanımlanan formatı izler: Tanım, Neden var, İlgili servisler, Yaygın yanlış anlamalar, Gerçek dünya benzetmesi.
+Bu sözlük, 11 deep-dive modülünün tamamında geçen terimleri, servisleri ve kavramları hızlı bir referansa dönüştürür. Girdiler alfabetik olarak düzenlenmiştir. Her girdi [glossary/README.md](README.md) dosyasında tanımlanan formatı izler: Tanım, Neden var, İlgili servisler, Yaygın yanlış anlamalar, Gerçek dünya benzetmesi.
 
 Bu bir referans belgesidir, öğretici değil — herhangi bir girdinin arkasındaki tam öğretici bağlam için ilgili [deep-dive](../deep-dive) modülüne bakın.
 
@@ -414,6 +414,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 
 ---
 
+### Cloud Scheduler
+
+**Tanım:** Tek bir dashboard'dan yönetilen, tamamen yönetilen, kurumsal düzeyde bir cron job scheduler; tekrarlayan bir programa göre bir Pub/Sub topic'ini, bir App Engine uygulamasını ya da herkese açık bir HTTP endpoint'ini tetikleyebilir.
+
+**Neden var:** Tekrarlayan job'lar (gecelik batch işleri, saatlik senkronizasyonlar) garantili execution ve başarısızlıkta otomatik retry'a ihtiyaç duyar — bir VM üzerinde kendi cron daemon'ını çalıştırmak, onun için patching, uptime ve monitoring'i de sahiplenmen anlamına gelir.
+
+**İlgili servisler:** Cloud Tasks, Pub/Sub, App Engine.
+
+**Yaygın yanlış anlamalar:** Cloud Scheduler'ın varsayılan time zone'u UTC'dir, ve UTC'de kalmak önerilir — daylight saving time uygulayan time zone'lar, saatler ileri alındığında bir job'ın atlanmasına ya da saatler geri alındığında iki kez çalışmasına neden olabilir.
+
+**Gerçek dünya benzetmesi:** Cloud Scheduler, bir binanın otomatik alarm sistemi saati gibidir — etraftaki kimin olduğundan bağımsız olarak tam olarak zamanlanmış saatlerde çalar, ve her şube için tek bir standart saat (UTC) kullanmak, her lokasyonun daylight saving'i farklı şekilde uygulamasının yarattığı kaosu önler.
+
+---
+
 ### Cloud Shell
 
 **Tanım:** Google Cloud SDK'sı önceden kurulu ve önceden kimlik doğrulanmış, 5 GB kalıcı home dizinli, ücretsiz, tarayıcı tabanlı, geçici bir Debian VM'i.
@@ -470,6 +484,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 
 ---
 
+### Cloud Tasks
+
+**Tanım:** Her biri belirli bir HTTP servisine dispatch edilen, çok sayıda dağıtık task'ın execution'ını, dispatch'ini ve teslimatını yapılandırılabilir rate limit'ler, retry'lar ve zamanlanmış dispatch saatleriyle yöneten bir servis.
+
+**Neden var:** Bir uygulamanın genelde ana request'i bloklamadan, belirli, bilinen bir yavaş işi (bir rapor üretmek, bir third-party API'yi çağırmak) offload etmesi gerekir, ama bunu hangi servisin ve ne zaman ele alacağı üzerinde doğrudan kontrolü elinde tutarak yapmak ister.
+
+**İlgili servisler:** Pub/Sub, Cloud Scheduler, Eventarc.
+
+**Yaygın yanlış anlamalar:** Cloud Tasks ve Pub/Sub kavramsal olarak benzerdir (ikisi de asenkron message passing yapar) ama birbirinin yerine geçmez: Cloud Tasks **explicit invocation** kullanır — creator, execution ve destination üzerinde tam kontrolü elinde tutar — Pub/Sub ise **implicit invocation** kullanır, burada bir mesaj publish etmek, mevcut olan hangi subscriber varsa onu tetikler, kimin alacağı üzerinde hiçbir kontrol yoktur.
+
+**Gerçek dünya benzetmesi:** Cloud Tasks, belirli bir mektubu belirli bir kuryeye, belirli teslimat talimatları ve bir teslimat saatiyle vermek gibidir; Pub/Sub ise bir panoya herkese açık bir duyuru asmak gibidir — şu anda ilgilenen herkes bu duyuru üzerinde harekete geçebilir, ve kimin ilgileneceği üzerinde hiçbir söz hakkın yoktur.
+
+---
+
 ### Cloud Trace
 
 **Tanım:** İstek başına gecikme verisini toplayan ve bir isteğin uygulamanda nasıl yayıldığını gösteren dağıtık bir izleme sistemi.
@@ -495,6 +523,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 **Yaygın yanlış anlamalar:** Cloud Workstations, Cloud Shell ile aynı şey değildir — Cloud Shell hızlı, geçici, tek kullanıcılı bir yönetim kabuğudur; Cloud Workstations standartlaştırılmış, kalıcı, ekip çapında bir geliştirme ortamıdır.
 
 **Gerçek dünya benzetmesi:** Cloud Shell bir otelin iş merkeziyse, Cloud Workstations her çalışana verilen, şirket tarafından sağlanan, aynı şekilde yapılandırılmış bir dizüstü bilgisayardır.
+
+---
+
+### CloudEvents
+
+**Tanım:** Event verisini tanımlamak için ortak bir metadata formatı sağlayan bir CNCF standart spesifikasyonu; Eventarc, kaynaktan bağımsız olarak event'leri tutarlı biçimde teslim etmek için bunu kullanır.
+
+**Neden var:** Event publisher'ları tarihsel olarak her biri kendi özel formatını kullandı, bu da consumer'ları kaynağa özel parsing kodu yazmaya zorluyordu — paylaşılan bir format, aynı event-handling mantığının, event nereden gelirse gelsin çalışmasını sağlar.
+
+**İlgili servisler:** Eventarc, Event, Event-Driven Architecture.
+
+**Yaygın yanlış anlamalar:** CloudEvents Google'a özgü değildir — birçok dil için SDK'ları olan (Python, JavaScript, Java, Go, C#, Ruby, PHP) bir CNCF (Cloud Native Computing Foundation) standardıdır, ve değeri özellikle herhangi bir tek kaynağa ya da vendor'a **bağlı olmamasında** yatar.
+
+**Gerçek dünya benzetmesi:** CloudEvents, her taşıyıcının kullandığı standartlaştırılmış bir kargo etiketi formatı gibidir — paketi hangi şirket teslim ederse etsin, etiket her zaman aynı yerde aynı alanlara sahiptir, bu yüzden teslim alan depo her taşıyıcı için farklı bir kabul süreci gerektirmez.
 
 ---
 
@@ -610,6 +652,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 
 ---
 
+### Enterprise Service Bus (ESB)
+
+**Tanım:** Service-Oriented Architecture (SOA) içinde kullanılan, servisler arası bağlantı, güvenlik ve mesaj routing/dönüşümünü yöneten merkezi bir messaging middleware bileşeni.
+
+**Neden var:** SOA'nın, her servisin — hatta organizasyon dışındaki uygulamaların bile — protokol ve veri dönüşümlerini birbirlerine karşı elle kodlamadan entegre olabilmesine ihtiyacı vardı; ESB bu işi merkezileştirir.
+
+**İlgili servisler:** Service-Oriented Architecture (SOA), Microservices.
+
+**Yaygın yanlış anlamalar:** ESB entegrasyon karmaşıklığını ortadan kaldırmaz, sadece taşır — SOA, tekil servislerdeki karmaşıklığı azalttı, ama bu karmaşıklık genelde tek bir merkezi takımın sahip olduğu ESB entegrasyon işi olarak yeniden ortaya çıktı ve her uygulama genelinde değişiklik göndermenin darboğazı haline geldi.
+
+**Gerçek dünya benzetmesi:** Bir ESB, büyük bir ofisteki her telefon çağrısının üzerinden geçmesi gereken, merkezi olarak yönetilen tek bir santral gibidir — teoride verimlidir, ama her kablolama değişikliği santral operatöründen geçmeyi gerektirir ve oradaki herhangi bir hata herkes için çağrıları düşürebilir.
+
+---
+
 ### Error Reporting
 
 **Tanım:** Çalışan uygulamalardaki hataları, açık API raporları ya da loglardan stack trace desen çıkarımı kullanarak otomatik olarak tespit eden, gruplandıran ve sayan bir servis.
@@ -621,6 +677,48 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 **Yaygın yanlış anlamalar:** Error Reporting'i etkinleştirmek ortama göre değişir: Cloud Run'da otomatik, GKE'de `cloud-platform` erişim kapsamı gerektirir, Compute Engine VM'inin servis hesabında **Error Reporting Writer** IAM rolü gerektirir.
 
 **Gerçek dünya benzetmesi:** Error Reporting, yüzlerce şikâyeti her bir bilet olarak tek tek göstermek yerine, onları gerçekte kaç kök nedenin yönlendirdiğine göre bir avuç gruba otomatik olarak ayıran bir müşteri şikâyet masasıdır.
+
+---
+
+### Event
+
+**Tanım:** Gerçekleşmiş bir şeyin kaydı (bir login, sepete eklenen bir ürün); immutable bir gerçek olarak ele alınır, hiç consume edilmeden üretilebilir, ve farklı servisler tarafından paralel olarak birden fazla kez persist edilip consume edilebilir.
+
+**Neden var:** Request/response çağrıları anında bir yanıt bekler ve işlendikten sonra ortadan kalkar; uygulamaların ayrıca, kimsenin hemen tepki vermeye hazır olmasına bağlı olmayan, "ne oldu"nun kalıcı ve replayable bir kaydına da ihtiyacı vardır.
+
+**İlgili servisler:** Event-Driven Architecture, Microservices.
+
+**Yaygın yanlış anlamalar:** Şu anda sıfır consumer'ı olan bir event otomatik olarak bir bug değildir — birçok producer, event'lerini bir şeyin consume edip etmediğini bilmez, bilmesine de gerek yoktur. Event'ler ayrıca sonradan düzenlenmemeli ya da silinmemelidir; bir düzeltme, eskisini değiştirmek yerine yeni bir event olarak ifade edilmelidir.
+
+**Gerçek dünya benzetmesi:** Bir event, bir günlük (diary) kaydıdır — bir kez yazıldıktan sonra, o anda ne olduğunun kalıcı bir kaydıdır. Dünkü kaydı, sonradan öğrendiklerini yansıtacak şekilde geri dönüp düzenlemezsin; bunun yerine yeni bir kayıt yazarsın.
+
+---
+
+### Event-Driven Architecture
+
+**Tanım:** Servislerin birbirini doğrudan çağırmak yerine, bir event intermediary üzerinden event üreterek ve consume ederek iletişim kurduğu bir mimari desen.
+
+**Neden var:** Microservices arasındaki point-to-point çağrılar, her servisin bağımlı olduğu her downstream servise nasıl ulaşacağını bilmesini zorunlu kılar, bu da coupling yaratır ve servis sayısı arttıkça yönetilemez bir iletişim "örümcek ağına" dönüşebilir.
+
+**İlgili servisler:** Event, Microservices, Enterprise Service Bus (ESB).
+
+**Yaygın yanlış anlamalar:** Bir event intermediary, bir Enterprise Service Bus (ESB) ile aynı şey değildir — ESB, her entegrasyon değişikliğinin kendisinden ve onu yöneten takımdan geçmesi gerektiği için bir darboğaza dönüşen, merkezi, SOA döneminden kalma bir routing/transformation katmanıydı; event intermediary ise özellikle producer'ları consumer'lardan (hiçbiri diğeri hakkında bir şey bilmek zorunda değildir, yalnızca event'in formatını bilirler) bu tür merkezi bir darboğazı yeniden yaratmadan ayırmak için var olur. Ayrıca, event-driven (asenkron) işlem, senkron request/response zincirlerinden yalnızca "farklı" değil, daha resilient'tır — event-driven bir sistemde çöken bir consumer sadece geride kalıp replay/redelivery ile yakalanabilirken, senkron bir zincirde çöken bir servis, çağrı yığınında yukarı doğru hataları cascade edebilir.
+
+**Gerçek dünya benzetmesi:** Senkron request/response çağrıları, bir dizi domino taşı gibidir — biri düşerse (başarısız olursa), arkasındaki her şey de düşer. Event-driven architecture ise daha çok bir posta kutuları setine benzer: gönderen bir mektubu bırakır ve yoluna devam eder; alıcı ortada değilse, mektup sadece geri gelene kadar bekler, tüm posta sistemi durmak yerine.
+
+---
+
+### Eventarc
+
+**Tanım:** Birçok GCP ve third-party kaynaktan gelen event'leri, kural tabanlı event trigger'ları kullanarak target'lara yönlendiren, standart CloudEvents formatında teslim eden, Google Cloud'un tamamen yönetilen eventing sistemi.
+
+**Neden var:** Mümkün olan her kaynak için event ingestion'ı elle kurmak (Cloud Audit Logs'u parse etmek, topic'leri/subscription'ları yönetmek, formatları normalize etmek) tekrarlayan, hataya açık bir iştir ve Eventarc bunu otomatikleştirir.
+
+**İlgili servisler:** Pub/Sub, CloudEvents, Event-Driven Architecture.
+
+**Yaygın yanlış anlamalar:** Eventarc bir Pub/Sub rakibi değildir — güvenilirlik ve observability için transport katmanı olarak Pub/Sub'ı kullanır, ama altındaki topic'leri ve subscription'ları otomatik olarak yönetir, bu yüzden uygulama yalnızca Eventarc'ın gönderdiği HTTP isteklerini kabul etmesi gerekir. Doğrudan event desteği olmayan kaynaklar için Eventarc, özel polling kodu gerektirmek yerine Cloud Audit Logs kayıtlarından event üretebilir.
+
+**Gerçek dünya benzetmesi:** Eventarc, her kaynağın yerel dilini zaten konuşan ve sana vermeden önce her şeyi tek bir standart formata çeviren evrensel bir event dispatcher'ı gibidir — düzinelerce farklı sistemi dinlemek için yalnızca tek bir dil öğrenmen yeterlidir.
 
 ---
 
@@ -890,6 +988,34 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 
 ---
 
+### Microservices
+
+**Tanım:** Bir uygulamayı, her biri kendi veritabanına sahip ve diğer servisler tarafından kullanılan bir API sunan, ayrı, kapsamı sınırlı servislere ayrıştıran decentralized (merkeziyetsiz) bir mimari stil.
+
+**Neden var:** Monolithler büyüdükçe sıkı bağlı ve bakımı zor hale gelir, SOA'nın paylaşılan Enterprise Service Bus (ESB)'i ise merkezi bir darboğazı yeniden yarattı; microservices, paylaşılan middleware'i tamamen kaldırarak servislerin bağımsız olarak inşa edilmesini, deploy edilmesini ve ölçeklenmesini sağlar.
+
+**İlgili servisler:** Monolith (Monolithic Application), Service-Oriented Architecture (SOA), Cloud Run, GKE.
+
+**Yaygın yanlış anlamalar:** Microservices otomatik olarak "daha iyi" ya da varsayılan başlangıç noktası değildir — domain uzmanlığı olmadan servis sınırlarını tasarlamak yeni bir projenin en zor kısımlarından biridir, bu yüzden modüler bir monolith ile başlayıp sonra geçiş yapmak genelde daha güvenli bir yoldur. Microservices ayrıca compute latency'sini artırır (in-process çağrılar ağ çağrılarına dönüşür) ve bağımsız deploy edilebilirlik, teknoloji özgürlüğü ve bağımsız ölçeklenme karşılığında gerçek bir operasyonel yük ekler (otomatik build/test/deploy, tutarlı logging ve güvenlik, dağıtık loglar üzerinde daha zor debugging).
+
+**Gerçek dünya benzetmesi:** Bir microservices mimarisi, her biri kendi kasasını ve kendi deposunu işleten, kendi sokak adresinden (API) ulaşılabilen bağımsız dükkanlardan oluşan bir şehir gibidir — her kasanın aynı merkezi arka ofis üzerinden çalıştığı tek bir dev mağaza yerine.
+
+---
+
+### Monolith (Monolithic Application)
+
+**Tanım:** UI, business logic ve data access'in hepsinin tek bir deploy edilebilir birimde toplandığı, genelde tek büyük bir ilişkisel veritabanının üzerinde çalışan, tek, kendi kendine yeten bir kod tabanı olarak inşa edilmiş uygulama.
+
+**Neden var:** Çoğu uygulama için doğal başlangıç noktasıdır: tek kod tabanı, tek deployment, dağıtık sistemlerin getirdiği ek yük yok — basit kalır, ta ki kalmayana kadar.
+
+**İlgili servisler:** Microservices, Service-Oriented Architecture (SOA).
+
+**Yaygın yanlış anlamalar:** Bir monolith doğası gereği "kötü bir mimari" değildir — problem domain'ini iyi servis sınırları çizecek kadar henüz anlamıyorsan, kasıtlı olarak (modüler) bir monolith ile başlayıp daha fazlasını öğrendikten sonra microservices'e geçmek meşru ve genelde önerilen bir stratejidir.
+
+**Gerçek dünya benzetmesi:** Bir monolith, kasanın, envanterin ve müşteri hizmetleri masalarının hepsinin aynı arka ofisi paylaştığı tek bir büyük mağazadır — açılması hızlıdır, ama bir köşedeki bir tadilat tüm binanın elektrik tesisatını devre dışı bırakabilir.
+
+---
+
 ### Multi-Region
 
 **Tanım:** Kaynakları, bir bölgedeki birden çok zon yerine, **birden çok bölgedeki** birden çok zona kopyalayan bir yapılandırma.
@@ -1114,6 +1240,34 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 
 ---
 
+### Pub/Sub
+
+**Tanım:** Bağımsız servislerin ya da uygulamaların mesaj göndermesini ve almasını sağlayan, tamamen yönetilen, gerçek zamanlı bir messaging servisi: bir publisher bir topic'e bir mesaj gönderir, ve mesaj her subscriber'ın kuyruğuna teslim edilir.
+
+**Neden var:** Event-driven ya da choreographed bir mimarideki servislerin, publisher'ın kimin (varsa) dinlediğini bilmesine ya da umursamasına gerek kalmadan mesaj geçirmenin kalıcı, decoupled bir yoluna ihtiyacı vardır.
+
+**İlgili servisler:** Eventarc, Event-Driven Architecture, Cloud Tasks.
+
+**Yaygın yanlış anlamalar:** Bir mesaj, ancak acknowledge edildikten sonra bir subscriber'ın kuyruğundan kaldırılır — bu, **at-least-once** teslimatı garanti eder (bir mesaj yeniden teslim edilebilir), exactly-once değil. Ayrıca, bir **pull subscription**'da subscriber mesajlar için poll eder, bir **push subscription**'da ise Pub/Sub mesajları yapılandırılmış bir endpoint'e otomatik olarak gönderir — bunlar aynı mekanizma değildir.
+
+**Gerçek dünya benzetmesi:** Pub/Sub, bir dergi aboneliği gibidir: publisher bir sayıyı bir kez yazar ve basar, ve mevcut her subscriber otomatik olarak kendi kopyasını alır — publisher kaç subscriber olduğunu ya da kim olduklarını takip etmez, umursamaz.
+
+---
+
+### Push-Based Messaging vs. Polling
+
+**Tanım:** Bir consumer'ın yeni işin mevcut olduğunu öğrenmesinin iki yolu: polling, bir kaynağa yeni bir şey olup olmadığını tekrar tekrar sorar; push-based messaging ise consume edilecek bir event olduğunda consumer'ı otomatik olarak bilgilendirir.
+
+**Neden var:** "Yeni bir şey var mı henüz?" diye sürekli sormak network I/O'sunu boşa harcar ve işin mevcut olduğu an ile gerçekten alındığı an arasına gecikme ekler — push-based teslimat her iki maliyetten de kaçınır.
+
+**İlgili servisler:** Event, Event-Driven Architecture.
+
+**Yaygın yanlış anlamalar:** Polling, push'un gerçek bir dezavantajı olmayan, sadece "daha az gelişmiş" bir versiyonu değildir — modül, polling'in genelde network I/O'yu artırdığını ve gereksiz işleme gecikmesi yarattığını açıkça belirtir; bu yüzden event consumer'ları için tercih edilen model push-based messaging'dir.
+
+**Gerçek dünya benzetmesi:** Polling, bir restoranı tekrar tekrar arayıp "siparişim hazır mı?" diye sormaktır. Push-based messaging ise restoranın sipariş hazır olduğu anda sana mesaj atmasıdır — kontrol etmek için çaba harcamazsın ve harekete geçilecek bir şey olduğu anda haberin olur.
+
+---
+
 ### Quotas (Rate and Allocation)
 
 **Tanım:** Kaçak kaynak tüketimini önleyen proje düzeyinde limitler. **Oran kotaları** sabit bir zaman penceresinden sonra sıfırlanır (örn. 100 saniyede 3.000 API çağrısı); **tahsis kotaları**, aynı anda tutabileceğin bir kaynak sayısını sınırlar (örn. proje başına 15 VPC ağı).
@@ -1209,6 +1363,34 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 **Yaygın yanlış anlamalar:** İndirilmiş servis hesabı anahtarları önemli bir risktir (kimlik bilgisi sızıntısı, ayrıcalık yükseltme, kimlik gizleme) ve **son çare** sayılır — attached Service Account, Workload Identity ya da Workload Identity Federation, tercih edilen, anahtarsız alternatiflerdir.
 
 **Gerçek dünya benzetmesi:** Bir servis hesabı, robot bir çalışandır — kendi rozetine ve kendi sınırlı kapı erişimine sahiptir ve asla hasta izni almaz ya da bir insanın onu kapıdan geçirmesine ihtiyaç duymaz.
+
+---
+
+### Service Choreography and Service Orchestration
+
+**Tanım:** Microservices'i koordine etmek için iki desen. **Choreography**'de her servis bağımsız çalışır, merkezi bir source of truth olmadan event'lere tepki verir. **Orchestration**'da merkezi bir orchestrator, servisler arasındaki tüm etkileşimleri kontrol eder.
+
+**Neden var:** Microservices arasındaki iletişimi koordine etmek, bir microservices mimarisinin en zor kısımlarından biridir — bir zamanlar bir monolith'in içinde yaşayan karmaşıklığın bir kısmı, servislerin birbiriyle nasıl konuştuğuna kayar, ve bunlar bunu yönetmenin iki temel yoludur.
+
+**İlgili servisler:** Event-Driven Architecture, Workflows, Eventarc.
+
+**Yaygın yanlış anlamalar:** Hiçbir desen kesin olarak "daha güvenli" bir varsayılan değildir. Orchestration, sürecin üst düzey bir görünümünü ve daha kolay troubleshooting'i verir, ama orchestrator bir single point of failure'dır. Choreography bu tek arıza noktasından kaçınır ve decentralized takımlara/organizasyonlara iyi uyar, ama merkezi bir source of truth'u yoktur, bu da genel akışı anlamayı zorlaştırır ve visibility, error handling ve retry'ları doğru yapmayı zorlaştırır.
+
+**Gerçek dünya benzetmesi:** Choreography, koreografi yapılmış bir dans gibidir — her dansçı kendi bölümünü bilir ve performans sırasında kimse aktif olarak yönlendirmeden bağımsız olarak icra eder. Orchestration ise bir orkestra gibidir — bir şef, her müzisyeni gerçek zamanlı olarak aktif olarak senkronize eder.
+
+---
+
+### Service-Oriented Architecture (SOA)
+
+**Tanım:** Bir uygulamayı, her biri ayrı bir iş fonksiyonunu yürüten, merkezi bir Enterprise Service Bus (ESB) üzerinden routing yapılan messaging ile tanımlı arayüzler üzerinden iletişim kuran, yeniden kullanılabilir servislere ayrıştıran bir mimari stil.
+
+**Neden var:** Monolithleri düzeltme girişimiydi — büyük, sıkı bağlı bir kod tabanını, daha küçük takımların sahip olabileceği daha küçük, daha gevşek bağlı, yeniden kullanılabilir servislere bölmek.
+
+**İlgili servisler:** Enterprise Service Bus (ESB), Monolith (Monolithic Application), Microservices.
+
+**Yaygın yanlış anlamalar:** SOA'nın entegrasyon karmaşıklığını kesin olarak çözdüğü sıkça varsayılır — pratikte genelde karışık sonuçlar üretti: servisler daha küçük ve daha gevşek bağlı hale geldi, ama onları bağlamanın karmaşıklığı kaybolmadı, merkezi bir takımın sahip olduğu ESB entegrasyonlarına taşındı ve bu yeni darboğaz haline geldi (microservices'in daha sonra paylaşılan ESB'yi tamamen kaldırmasının nedeni de budur).
+
+**Gerçek dünya benzetmesi:** SOA, bir şirketteki birkaç bağımsız departmanın yalnızca tek bir merkezi posta odası üzerinden iletişim kurması gibidir — departmanların kendisi kendi başına gayet iyi çalışır, ama artık departmanlar arası her istek o tek posta odasının kapasitesine bağımlıdır.
 
 ---
 
@@ -1363,6 +1545,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 **Yaygın yanlış anlamalar:** Bunlar farklı sorunları çözer — Peering iki bağımsız ağı eşit olarak bağlar; Shared VPC, başka projelerin ödünç aldığı tek bir ağı, IAM kontrolü altında merkezileştirir.
 
 **Gerçek dünya benzetmesi:** VPC Peering, iki komşu apartmanın sakinlerinin birbirinin avlusunu kullanmasına izin vermeyi kabul etmesi gibidir. Shared VPC, birkaç binanın hepsinin tek bir paylaşılan bina yöneticisinin altyapısına bağlanması gibidir.
+
+---
+
+### Workflows
+
+**Tanım:** GCP servislerini ve API çağrılarını stateful, otomatikleştirilmiş süreçlere orchestrate eden workflow'lar tasarlamak ve deploy etmek için Google Cloud'un tamamen yönetilen orchestration platformu.
+
+**Neden var:** Service-orchestration deseninin somut implementasyonudur — bir iş süreci için merkezi, observable bir source of truth, state tutabilen, retry yapabilen, poll edebilen ya da bir yıla kadar bekleyebilen, bu da gerçekten uzun süren süreçleri pratik hale getirir.
+
+**İlgili servisler:** Service Choreography and Service Orchestration, Eventarc, Cloud Tasks.
+
+**Yaygın yanlış anlamalar:** Workflows ve Eventarc, aynı iş için deploy edilen rakipler değildir — pratikte genelde birleştirilirler: Workflows, bir servisin kendi süreci **içinde** orchestration'ı yönetir, Eventarc ise bağımsız olarak orchestrate edilen servisler **arasında** event trigger'ları taşır (sınırlar arasında choreography).
+
+**Gerçek dünya benzetmesi:** Workflows, çok adımlı bir sürecin ana kontrol listesini elinde tutan, işlerin tam olarak nerede durduğunu izleyen, başarısız olan bir adımı yeniden deneyen, ve günlerce duraklayıp bekleyebilen ama yerini hiç kaybetmeyen bir proje yöneticisi gibidir.
 
 ---
 
