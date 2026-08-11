@@ -1,6 +1,6 @@
 # Glossary (English)
 
-This glossary distills the terms, services, and concepts introduced across all 11 deep-dive modules into a quick reference. Entries are organized alphabetically. Each entry follows the format described in [glossary/README.md](README.md): Definition, Why it exists, Related services, Common misconceptions, Real-world analogy.
+This glossary distills the terms, services, and concepts introduced across all 12 deep-dive modules into a quick reference. Entries are organized alphabetically. Each entry follows the format described in [glossary/README.md](README.md): Definition, Why it exists, Related services, Common misconceptions, Real-world analogy.
 
 This is a reference, not a tutorial — for the full teaching context behind any entry, see the corresponding [deep-dive](../deep-dive) module.
 
@@ -147,6 +147,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 **Common misconceptions:** Scaling *out* (adding more machines, horizontal) is the cloud's natural tendency and differs from scaling *up* (making one machine bigger, vertical) — most workloads should default to designing for scale-out.
 
 **Real-world analogy:** Autoscaling is like a restaurant that calls in more staff automatically when a dinner rush starts, and sends people home when it quiets down.
+
+---
+
+### Background Function
+
+**Definition:** The older-style implementation of an event-driven Cloud Run function, which receives event data based on the type of event, supported only by Cloud Run functions (1st gen) on the Node.js, Python, Go, and Java runtimes.
+
+**Why it exists:** It was the original way Cloud Functions 1st generation handled event triggers, before the CloudEvents standard and the Functions Framework unified event-driven functions across generations and languages.
+
+**Related services:** Cloud Run Functions, CloudEvent Function, Functions Framework, Eventarc.
+
+**Common misconceptions:** A Background function is not an alternative style to freely choose today — it's tied specifically to Cloud Run functions 1st gen on a handful of runtimes. New event-driven functions on Cloud Run functions (2nd gen) use CloudEvent functions instead, across every supported language.
+
+**Real-world analogy:** If a CloudEvent function speaks a standard, translated language everyone understands, a Background function is like an old radio dispatch system that only a specific, older fleet of vehicles knows how to tune into.
 
 ---
 
@@ -528,6 +542,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 
 ---
 
+### CloudEvent Function
+
+**Definition:** The current implementation style for event-driven Cloud Run functions, based on the CloudEvents industry-standard specification and registered with the Functions Framework; supported across all Cloud Run functions language runtimes (and by Cloud Run functions 1st gen for .NET, Ruby, and PHP).
+
+**Why it exists:** To give event-driven functions a standardized, portable way to receive event data, replacing the older, generation-and-language-specific Background function model.
+
+**Related services:** Cloud Run Functions, Background Function, Functions Framework, CloudEvents, Eventarc.
+
+**Common misconceptions:** A CloudEvent function is not the same thing as an HTTP function — it's one of the two event-driven function styles (the current one), triggered by an event trigger rather than a direct HTTP request.
+
+**Real-world analogy:** A CloudEvent function is like a delivery driver trained on one universal parcel-label standard, able to pick up packages from any carrier without needing carrier-specific instructions.
+
+---
+
 ### CloudEvents
 
 **Definition:** A CNCF standard specification providing a common metadata format for describing event data, used by Eventarc to deliver events consistently regardless of source.
@@ -777,6 +805,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 **Common misconceptions:** Latency must be measured separately for successful vs. failed requests (a fast-failing 500 error can artificially lower average latency). "Errors" includes more than HTTP 5xx — a 200 response with wrong content, or a response that violates an SLA, both count. Saturation can start degrading performance **before** reaching 100% utilization.
 
 **Real-world analogy:** The four golden signals are like a doctor's basic vitals check — pulse, blood pressure, temperature, oxygen — a universal starting point before digging deeper.
+
+---
+
+### Functions Framework
+
+**Definition:** An open-source library that wraps user function code within a persistent HTTP application, used to register both HTTP functions and CloudEvent functions for Cloud Run functions.
+
+**Why it exists:** Cloud Run functions still runs on Cloud Run's HTTP-based container model underneath; the Functions Framework is what lets a developer write a small, single-purpose function instead of a full HTTP server, while Cloud Run functions handles the rest.
+
+**Related services:** Cloud Run Functions, CloudEvent Function, Cloud Build, Artifact Registry.
+
+**Common misconceptions:** The Functions Framework is not a Cloud Run functions-specific proprietary format — it's an open-source library with implementations per language (Node.js, Python, Go, and others), each pulled in as a dependency in that language's standard package manifest (e.g., `package.json`, `requirements.txt`, `go.mod`).
+
+**Real-world analogy:** The Functions Framework is like a standardized electrical adapter built into every outlet — you plug in your specific appliance (function code) without worrying about the wiring (the HTTP server) behind the wall.
 
 ---
 

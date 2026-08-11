@@ -1,6 +1,6 @@
 # Sözlük (Türkçe)
 
-Bu sözlük, 11 deep-dive modülünün tamamında geçen terimleri, servisleri ve kavramları hızlı bir referansa dönüştürür. Girdiler alfabetik olarak düzenlenmiştir. Her girdi [glossary/README.md](README.md) dosyasında tanımlanan formatı izler: Tanım, Neden var, İlgili servisler, Yaygın yanlış anlamalar, Gerçek dünya benzetmesi.
+Bu sözlük, 12 deep-dive modülünün tamamında geçen terimleri, servisleri ve kavramları hızlı bir referansa dönüştürür. Girdiler alfabetik olarak düzenlenmiştir. Her girdi [glossary/README.md](README.md) dosyasında tanımlanan formatı izler: Tanım, Neden var, İlgili servisler, Yaygın yanlış anlamalar, Gerçek dünya benzetmesi.
 
 Bu bir referans belgesidir, öğretici değil — herhangi bir girdinin arkasındaki tam öğretici bağlam için ilgili [deep-dive](../deep-dive) modülüne bakın.
 
@@ -145,6 +145,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 **Yaygın yanlış anlamalar:** Dışa (out) ölçeklenmek (daha fazla makine eklemek, yatay) bulutun doğal eğilimidir ve yukarı (up) ölçeklenmekten (tek makineyi büyütmek, dikey) farklıdır — çoğu iş yükü varsayılan olarak dışa ölçeklenmeye göre tasarlanmalıdır.
 
 **Gerçek dünya benzetmesi:** Autoscaling, akşam yemeği yoğunluğu başladığında otomatik olarak daha fazla personel çağıran ve sakinleşince insanları eve gönderen bir restoran gibidir.
+
+---
+
+### Background Function
+
+**Tanım:** Event-driven bir Cloud Run function'ının daha eski stil implementasyonu; event verisini event türüne göre alır, yalnızca Cloud Run functions (1st gen) tarafından Node.js, Python, Go ve Java runtime'larında desteklenir.
+
+**Neden var:** CloudEvents standardı ve Functions Framework, event-driven function'ları generation'lar ve diller arasında birleştirmeden önce, Cloud Functions 1st generation'ın event trigger'ları ele almasının orijinal yoluydu.
+
+**İlgili servisler:** Cloud Run Functions, CloudEvent Function, Functions Framework, Eventarc.
+
+**Yaygın yanlış anlamalar:** Bir Background function, bugün serbestçe seçilebilecek bir alternatif stil değildir — belirli birkaç runtime'da özellikle Cloud Run functions 1st gen'e bağlıdır. Cloud Run functions'da (2nd gen) yeni event-driven function'lar, desteklenen her dilde bunun yerine CloudEvent functions kullanır.
+
+**Gerçek dünya benzetmesi:** Bir CloudEvent function herkesin anladığı standart, çevrilmiş bir dil konuşuyorsa, bir Background function yalnızca belirli, daha eski bir araç filosunun ayarlamayı bildiği eski bir telsiz sevkiyat sistemi gibidir.
 
 ---
 
@@ -526,6 +540,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 
 ---
 
+### CloudEvent Function
+
+**Tanım:** Event-driven Cloud Run functions için güncel implementasyon stili; CloudEvents endüstri standardı spesifikasyonu üzerine kuruludur ve Functions Framework'e kayıtlıdır; tüm Cloud Run functions dil runtime'larında (ve Cloud Run functions 1st gen tarafından .NET, Ruby ve PHP için) desteklenir.
+
+**Neden var:** Event-driven function'lara, daha eski, generation'a ve dile özgü Background function modelinin yerine, event verisini almanın standartlaştırılmış, taşınabilir bir yolunu vermek için.
+
+**İlgili servisler:** Cloud Run Functions, Background Function, Functions Framework, CloudEvents, Eventarc.
+
+**Yaygın yanlış anlamalar:** Bir CloudEvent function, bir HTTP function ile aynı şey değildir — doğrudan bir HTTP isteği yerine bir event trigger tarafından tetiklenen, iki event-driven function stilinden biridir (güncel olanı).
+
+**Gerçek dünya benzetmesi:** Bir CloudEvent function, evrensel bir paket etiketleme standardında eğitilmiş, taşıyıcıya özgü talimatlara ihtiyaç duymadan herhangi bir taşıyıcıdan paket alabilen bir kurye gibidir.
+
+---
+
 ### CloudEvents
 
 **Tanım:** Event verisini tanımlamak için ortak bir metadata formatı sağlayan bir CNCF standart spesifikasyonu; Eventarc, kaynaktan bağımsız olarak event'leri tutarlı biçimde teslim etmek için bunu kullanır.
@@ -775,6 +803,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 **Yaygın yanlış anlamalar:** Gecikme, başarılı ve başarısız istekler için ayrı ölçülmelidir (hızlı başarısız olan bir 500 hatası, ortalama gecikmeyi yapay olarak düşürebilir). "Hatalar" HTTP 5xx'ten fazlasını kapsar — yanlış içerikli bir 200 yanıtı ya da bir SLA'yı ihlal eden bir yanıt da sayılır. Doygunluk, %100 kullanıma ulaşmadan **önce** bozulmaya başlayabilir.
 
 **Gerçek dünya benzetmesi:** Dört altın sinyal, bir doktorun temel vital bulgu kontrolü gibidir — nabız, tansiyon, ateş, oksijen — daha derine inmeden önceki evrensel bir başlangıç noktası.
+
+---
+
+### Functions Framework
+
+**Tanım:** Kullanıcı function kodunu kalıcı bir HTTP uygulamasında saran, Cloud Run functions için hem HTTP functions'ı hem CloudEvent functions'ı register etmek amacıyla kullanılan açık kaynaklı bir kütüphane.
+
+**Neden var:** Cloud Run functions altta hâlâ Cloud Run'ın HTTP tabanlı container modeli üzerinde çalışır; Functions Framework, bir geliştiricinin tam bir HTTP server yerine küçük, tek amaçlı bir function yazmasına izin veren şeydir — geri kalanını Cloud Run functions halleder.
+
+**İlgili servisler:** Cloud Run Functions, CloudEvent Function, Cloud Build, Artifact Registry.
+
+**Yaygın yanlış anlamalar:** Functions Framework, Cloud Run functions'a özgü tescilli bir format değildir — dil başına implementasyonları olan (Node.js, Python, Go ve diğerleri) açık kaynaklı bir kütüphanedir; her biri o dilin standart paket manifest'ine (örn. `package.json`, `requirements.txt`, `go.mod`) bir dependency olarak dahil edilir.
+
+**Gerçek dünya benzetmesi:** Functions Framework, her prize yerleşik, standartlaştırılmış bir elektrik adaptörü gibidir — duvarın arkasındaki kablolamayla (HTTP server) uğraşmadan kendi özel cihazınızı (function kodunuzu) takarsınız.
 
 ---
 
