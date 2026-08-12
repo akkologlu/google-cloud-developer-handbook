@@ -12,16 +12,16 @@ Sorular, gerçek sınavda insanların gerçekten takıldığı ayrımlara ağır
 
 **1.** Bir takım, beş yıllık uygulamalarını "UI, business logic ve data access'in tek bir kod tabanında, tek bir ilişkisel veritabanının üzerinde toplandığı, bir alandaki değişikliğin sık sık ilgisiz bir şeyi bozduğu" bir yapı olarak tanımlıyor. Burada tanımlanan mimari stil nedir ve kırılganlığın (fragility) spesifik nedeni ne?
 
-A. Service-Oriented Architecture; kırılganlık ESB yanlış yapılandırmasından kaynaklanır.
-B. Bir monolith; kırılganlık, sürekli büyüyen tek bir kod tabanının parçaları arasındaki sıkı bağlılıktan (tight coupling) kaynaklanır.
+A. Bir monolith; kırılganlık, sürekli büyüyen tek bir kod tabanının parçaları arasındaki sıkı bağlılıktan (tight coupling) kaynaklanır.
+B. Service-Oriented Architecture; kırılganlık ESB yanlış yapılandırmasından kaynaklanır.
 C. Microservices; kırılganlık, bağımsız deploy edilen çok fazla servisten kaynaklanır.
 D. Bir monolith; kırılganlık çok fazla veritabanı olmasından kaynaklanır.
 
 **2.** Bir takım, servis kodundaki karmaşıklığı azaltmak amacıyla özellikle Service-Oriented Architecture (SOA)'yı benimsedi. Bir yıl sonra, genel sistem karmaşıklığının aslında ortadan kalkmadığını — sadece başka bir yere taşındığını, ve o "başka yerin" artık herhangi bir değişikliği göndermenin (ship etmenin) en büyük tek darboğazı olduğunu bildiriyorlar. Karmaşıklık nereye taşındı ve neden bir darboğaz haline geldi?
 
 A. İlişkisel veritabanı şemasına taşındı, artık her deploy için bir DBA gerekiyor.
-B. Genelde tek bir merkezi takım tarafından yönetilen Enterprise Service Bus (ESB) entegrasyonlarına taşındı, bu yüzden neredeyse her uygulama veya servis değişikliği ESB işi gerektirdi ve bu takımın zamanı için rekabet etti.
-C. Kayboldu — SOA, tasarımı gereği entegrasyon karmaşıklığını tamamen ortadan kaldırır.
+B. Kayboldu — SOA, tasarımı gereği entegrasyon karmaşıklığını tamamen ortadan kaldırır.
+C. Genelde tek bir merkezi takım tarafından yönetilen Enterprise Service Bus (ESB) entegrasyonlarına taşındı, bu yüzden neredeyse her uygulama veya servis değişikliği ESB işi gerektirdi ve bu takımın zamanı için rekabet etti.
 D. İstemci uygulamalarına taşındı, onlar artık kendi mesaj routing'lerini implemente etmek zorunda.
 
 **3.** Bir SOA dağıtımında, bir geliştirici kendi servisinin mesajlarının paylaşılan Enterprise Service Bus (ESB) üzerinden nasıl route edildiğini değiştirmesi gerekiyor. Başka bir takım buna itiraz ederek, bunun kendi uygulamalarını istikrarsızlaştırabileceği konusunda uyarıyor. Bu, (microservices'in aksine) özellikle SOA'da neden gerçekçi bir endişe?
@@ -34,14 +34,14 @@ D. Çünkü ESB'ler, tam bir platform yükseltmesi olmadan routing değişiklikl
 **4.** İki mühendis, yeni projelerinin ilk günden microservices olarak inşa edilip edilmeyeceğini tartışıyor. Biri "microservices kesinlikle daha modern, bu yüzden her zaman oradan başlamalıyız" diye savunuyor. Ancak takım, inşa ettikleri iş alanında (business domain) henüz derin bir uzmanlığa sahip değil. Modülün rehberliği burada aslında neyi önerir?
 
 A. Her koşulda microservices ile başla — uzmanlık, servis sınırları çizildikten sonra geliştirilebilir.
-B. Bir monolith ile başla ve onu modüler tasarla, çünkü servis sınırlarını tasarlamak yeni bir microservices projesinin en zor kısımlarından biridir ve domain'i anladıktan sonra bu daha kolaydır.
-C. Monolith ile microservices arasında bir orta yol olarak SOA ile başla.
-D. Karar önemsizdir — modül, mimari stilin domain uzmanlığıyla hiçbir ilgisi olmadığını belirtir.
+B. Monolith ile microservices arasında bir orta yol olarak SOA ile başla.
+C. Karar önemsizdir — modül, mimari stilin domain uzmanlığıyla hiçbir ilgisi olmadığını belirtir.
+D. Bir monolith ile başla ve onu modüler tasarla, çünkü servis sınırlarını tasarlamak yeni bir microservices projesinin en zor kısımlarından biridir ve domain'i anladıktan sonra bu daha kolaydır.
 
 **5.** Bir startup, önümüzdeki iki yılda mühendislik takımının önemli ölçüde büyüyeceğini öngörüyor ve yeni işe alınanların önce tüm büyük kod tabanını öğrenmeden katkıda bulunabilmesini istiyor. Modül bu spesifik endişe için hangi mimari başlangıç noktasını önerir ve neden?
 
-A. Bir monolith, çünkü tek bir kod tabanına yeni mühendisleri bütün olarak onboard etmek daha kolaydır.
-B. Microservices, çünkü doğal servis sınırları her takım üyesinin tüm uygulamayı değil, sistemin daha küçük, sınırları belli bir parçasına odaklanmasını sağlar.
+A. Microservices, çünkü doğal servis sınırları her takım üyesinin tüm uygulamayı değil, sistemin daha küçük, sınırları belli bir parçasına odaklanmasını sağlar.
+B. Bir monolith, çünkü tek bir kod tabanına yeni mühendisleri bütün olarak onboard etmek daha kolaydır.
 C. SOA, çünkü ESB tüm sistemi yeni işe alınanlar için otomatik olarak dokümante eder.
 D. Hiçbiri — modüle göre takım büyümesinin mimari seçimiyle bir ilgisi yoktur.
 
@@ -62,22 +62,22 @@ D. Migration sırasında veritabanının kendisi yanlış yapılandırılmış o
 **8.** Microservices inşa eden bir takım, her takımın kendi programlama dilini ve framework'ünü seçmesine izin veriyor ve farklı servisler farklı platformlarda çalışan farklı dillerde yazılıyor. Şüpheci biri bunun sistemi bozacağından endişe ediyor. Bu, bir microservices mimarisinde neden genelde sorunsuz çalışır?
 
 A. Çalışmaz — tüm microservices'in birlikte çalışabilmesi için aynı dilde yazılması gerekir.
-B. Servisler kendi API arayüzleri (genelde HTTP) üzerinden birlikte çalışır, bu yüzden bir servisin içinde kullanılan dil, framework ya da platform, onu çağıran servisler için görünmezdir.
-C. Yalnızca her servis ESB ile aynı dilde yazılırsa çalışır.
-D. Yalnızca Kubernetes ağ katmanında diller arasında otomatik çeviri yaptığı için çalışır.
+B. Yalnızca her servis ESB ile aynı dilde yazılırsa çalışır.
+C. Yalnızca Kubernetes ağ katmanında diller arasında otomatik çeviri yaptığı için çalışır.
+D. Servisler kendi API arayüzleri (genelde HTTP) üzerinden birlikte çalışır, bu yüzden bir servisin içinde kullanılan dil, framework ya da platform, onu çağıran servisler için görünmezdir.
 
 **9.** Bir trafik sıçraması sırasında, bir microservice (checkout), normal yükte çalışan diğerlerinden (search, recommendations) önemli ölçüde daha fazla compute kapasitesine ihtiyaç duyuyor. Bir monolith'te, checkout'un sıçramasını karşılamak için tüm uygulamayı ölçeklendirmeniz gerekirdi. Buradaki microservices'e özgü avantaj nedir?
 
-A. Microservices her zaman trafikten bağımsız sabit bir kapasitede çalışır, bu yüzden bu senaryo hiç oluşamaz.
-B. Her microservice bağımsız olarak ölçeklenebilir, böylece tüm uygulamayı aşırı provizyonlamak yerine özellikle checkout'a daha fazla kaynak ayırabilirsiniz.
+A. Her microservice bağımsız olarak ölçeklenebilir, böylece tüm uygulamayı aşırı provizyonlamak yerine özellikle checkout'a daha fazla kaynak ayırabilirsiniz.
+B. Microservices her zaman trafikten bağımsız sabit bir kapasitede çalışır, bu yüzden bu senaryo hiç oluşamaz.
 C. Bu avantaj yalnızca SOA'ya özgüdür ve microservices için geçerli değildir.
 D. Bağımsız ölçeklenme, API'lerden vazgeçip doğrudan veritabanı erişimine geçmeyi gerektirir.
 
 **10.** Bir organizasyon 3 monolitik uygulamadan yaklaşık 80 microservice'e geçiyor. Altı ay sonra operasyon takımı, hepsinde build, test ve deployment'ı sorunsuz çalışır tutmakla bunalmış durumda olduklarını söylüyor. Modül, altta yatan nedeni ve gerekli önlemi ne olarak tanımlıyor?
 
 A. Bu mimari değişiklikle ilgisizdir — bir işe alım sorunudur.
-B. Çok daha fazla deploy edilebilir varlığa sahip olmak çok daha büyük bir operasyonel yük yaratır; otomatik build, test ve deployment bunu yönetilebilir tutmak için hayati önemdedir.
-C. Microservices tam olarak bu nedenle asla 10 servisi geçmemelidir.
+B. Microservices tam olarak bu nedenle asla 10 servisi geçmemelidir.
+C. Çok daha fazla deploy edilebilir varlığa sahip olmak çok daha büyük bir operasyonel yük yaratır; otomatik build, test ve deployment bunu yönetilebilir tutmak için hayati önemdedir.
 D. Çözüm, operasyonel yüzeyi azaltmak için 80 servisin tamamını tekrar tek bir ESB'ye konsolide etmektir.
 
 **11.** Bir güvenlik mühendisi, microservice sayısı arttıkça log formatlarının, authorization kontrollerinin ve reporting'in takımlar arasında tutarsız hale geldiğini ve bunun denetimleri (audit) eski monolith'e göre çok daha zorlaştırdığını fark ediyor. Bu, microservices'in hangi temel zorluğunu gösteriyor?
@@ -91,47 +91,47 @@ D. Her servis izole olduğu için microservices mimarisinde güvenlik endişeler
 
 A. Kaçınılmazdır — 10'dan fazla servise sahip herhangi bir sistem her zaman okunamaz hale gelir.
 B. Yalnızca servisler farklı dillerde yazıldığında olur.
-C. Kötü tasarlanmış servisler arası iletişimden kaynaklanır; modül bunu, microservices kullanmanın kaçınılmaz bir sonucu değil, kasıtlı tasarımla yönetilmesi gereken gerçek bir risk olarak çerçeveliyor.
-D. Takımın tüm servisleri derhal tek bir monolith'e geri birleştirmesi gerektiğinin bir işaretidir.
+C. Takımın tüm servisleri derhal tek bir monolith'e geri birleştirmesi gerektiğinin bir işaretidir.
+D. Kötü tasarlanmış servisler arası iletişimden kaynaklanır; modül bunu, microservices kullanmanın kaçınılmaz bir sonucu değil, kasıtlı tasarımla yönetilmesi gereken gerçek bir risk olarak çerçeveliyor.
 
 **13.** Bir QA lideri, her bir microservice için unit test'lerin hızlı ve basit olduğundan ama *tüm sistemin* doğru davrandığını doğrulamanın neredeyse production ortamının tamamını ayağa kaldırmayı gerektirdiğinden şikayet ediyor. Modül, bunun bir microservices mimarisinde neden beklenen bir şey olduğunu söylüyor?
 
-A. Beklenmez — microservices'te integration testing, unit testing kadar basit olmalıdır.
-B. Microservices'in dağıtık doğası, genelde tüm sistemi test etmenin tüm production dağıtımını modellemeyi gerektirdiği anlamına gelir; bileşenlerin aynı process içinde çalıştığı bir monolith'in aksine.
+A. Microservices'in dağıtık doğası, genelde tüm sistemi test etmenin tüm production dağıtımını modellemeyi gerektirdiği anlamına gelir; bileşenlerin aynı process içinde çalıştığı bir monolith'in aksine.
+B. Beklenmez — microservices'te integration testing, unit testing kadar basit olmalıdır.
 C. Bu yalnızca servisler tek bir veritabanını paylaştığında olur.
 D. Her servis için unit test'ler geçtiğinde integration testing gereksizdir.
 
 **14.** Bir olaydan sonra, bir mühendisin on iki farklı microservice'e dokunan, her biri kendi ayrı loglarını yazan başarısız bir tek iş operasyonunu izlemesi gerekiyor. Bunun, takımın eski monolith'indeki eşdeğer akışı debug etmekten çok daha zor olduğunu bildiriyor. Modül bunun nedenini ne olarak tanımlıyor?
 
 A. Microservices hiç log üretmez, bu yüzden izlenecek bir şey yoktur.
-B. Her microservice kendi loglarını oluşturduğu için, birçok microservice'e yayılan bir çağrıyı izlemek, tek bir monolitik process içindeki çağrıları izlemekten doğası gereği daha zordur.
-C. Bu mimariyle ilgisizdir — tamamen bir araç bütçesi sorunudur.
+B. Bu mimariyle ilgisizdir — tamamen bir araç bütçesi sorunudur.
+C. Her microservice kendi loglarını oluşturduğu için, birçok microservice'e yayılan bir çağrıyı izlemek, tek bir monolitik process içindeki çağrıları izlemekten doğası gereği daha zordur.
 D. Debugging microservices'te daha kolaydır çünkü her servis daha küçüktür.
 
 **15.** Bir liderlik takımı microservices'i benimseyip benimsememeyi tartıyor. Şunu soruyorlar: "faydalar gerçekten zorluklardan ağır mı basıyor?" Modülün çerçevesine göre, en doğru cevap nedir?
 
 A. Hayır — microservices'in zorlukları her zaman faydalarından ağır basar, bu yüzden monolithler kesinlikle üstündür.
-B. Evet, koşulsuz olarak — microservices, benimsendikten sonra anlamlı bir dezavantaja sahip değildir.
-C. Genelde evet, ama yalnızca otomasyona ve operasyonel mükemmelliğe gerçek bir bağlılıkla; bu araçlara yatırım yapmadan, birçok bağımsız deploy edilebilir servisin operasyonel yükü faydaları geride bırakabilir.
+B. Genelde evet, ama yalnızca otomasyona ve operasyonel mükemmelliğe gerçek bir bağlılıkla; bu araçlara yatırım yapmadan, birçok bağımsız deploy edilebilir servisin operasyonel yükü faydaları geride bırakabilir.
+C. Evet, koşulsuz olarak — microservices, benimsendikten sonra anlamlı bir dezavantaja sahip değildir.
 D. Trade-off önemsizdir — seçim yalnızca takım büyüklüğüne dayanmalıdır, asla operasyonel hazırlığa değil.
 
 ---
 
 ## Cevap Anahtarı ve Açıklamalar
 
-**1. Doğru cevap: B.**
+**1. Doğru cevap: A.**
 UI, business logic ve data access'i tek bir veritabanı üzerinde birleştiren, ilgisiz değişikliklerin bozulmaya neden olduğu tek bir kod tabanı, ders kitabı tanımıyla bir monolith'tir — ve modül bu kırılganlığı özellikle tek uygulama içindeki sıkı bağlılığa (tight coupling) atfeder, veritabanı sayısına ya da ESB davranışına değil.
 
-**2. Doğru cevap: B.**
+**2. Doğru cevap: C.**
 SOA, tekil servislerin içindeki karmaşıklığı azalttı, ama modül bu karmaşıklığın ortadan kalkmadığını, *taşındığını* açıkça belirtir — ESB entegrasyonlarına taşındı, bunlar genelde merkezi olarak yönetiliyordu, bu da ESB işini her uygulama/servis takımının rekabet etmek zorunda kaldığı bir darboğaza dönüştürdü.
 
 **3. Doğru cevap: B.**
 ESB paylaşılan, merkezileştirilmiş bir mesajlaşma katmanı olduğu için, bir uygulamanın entegrasyonundaki bir routing değişikliği, aynı bus üzerinden route edilen diğer uygulamaları gerçekten istikrarsızlaştırabilir — bu merkezi-darboğaz riski, tam olarak microservices'in decentralized, servis-başına API'lerinin önlemek için tasarlandığı şeydir.
 
-**4. Doğru cevap: B.**
+**4. Doğru cevap: D.**
 Modül bu konuda nettir: problem domain'inde uzmanlığın yoksa, servis sınırlarını tasarlamak yeni bir microservices projesinin en zor kısımlarından biridir, bu yüzden modüler bir monolith ile başlayıp daha sonra — domain'i anladıktan sonra — geçiş yapmak önerilen yoldur. "Microservices her zaman modern varsayılandır" (A) tuzaktır.
 
-**5. Doğru cevap: B.**
+**5. Doğru cevap: A.**
 Modül, takım büyümesini özellikle microservices'e bağlar: doğal servis sınırları, yeni takım üyelerinin tüm uygulamayı baştan sona öğrenmek yerine sistemin daha küçük bir parçasına odaklanmasını sağlar.
 
 **6. Doğru cevap: C.**
@@ -140,26 +140,26 @@ Microservices, SOA'ya açıkça decentralized bir alternatif olarak çerçevelen
 **7. Doğru cevap: B.**
 Microservices arasındaki çağrılar ağ üzerinden geçer; modül bunu bir monolith içindeki in-process çağrılardan binlerce kat daha yavaş olarak tanımlar; tek bir iş operasyonu birçok zincirlenmiş microservice çağrısı gerektirdiğinde, bu gecikme birikir ve fark edilir hale gelir — hiçbir tekil servis yavaş olmasa bile.
 
-**8. Doğru cevap: B.**
+**8. Doğru cevap: D.**
 Microservices bir API arayüzü üzerinden bağlanır, bu yüzden bir servisin içinde kullanılan dil, framework ve teknoloji, onu çağıran her şey için görünmezdir — farklı takımların birlikte çalışabilirliği bozmadan farklı teknoloji yığınları seçmesini sağlayan tam olarak budur.
 
-**9. Doğru cevap: B.**
+**9. Doğru cevap: A.**
 Bağımsız ölçeklenme, temel bir microservices faydasıdır: her servis ayrı deploy edilebildiği için, bir monolith'te olduğu gibi tüm uygulamayı ölçeklendirmek (ve bunun için ödeme yapmak) yerine, yük altındaki servise (checkout) özellikle daha fazla kaynak ayırabilirsiniz.
 
-**10. Doğru cevap: B.**
+**10. Doğru cevap: C.**
 Daha fazla deploy edilebilir varlık doğrudan daha büyük bir operasyonel yüke dönüşür; modül, çok sayıda microservice'i sağlıklı ve yönetilebilir tutmak için otomatik build, test ve deployment'ın hayati olduğunu açıkça belirtir — bu bir işe alım sorunu ya da servis sayısında sert bir tavan değil, bir otomasyon gereksinimidir.
 
 **11. Doğru cevap: B.**
 Modül, birçok servis genelinde tutarlı logging, reporting, security ve authorization'ı, microservices mimarilerinin açık bir zorluğu olarak listeler — servis sayısı arttıkça bu otomatik olarak gerçekleşmez ve tek bir programlama diline bağlı değildir.
 
-**12. Doğru cevap: C.**
+**12. Doğru cevap: D.**
 Servisler arası iletişimin "örümcek ağı", *sistemlerin iyi tasarlanmamasının* bir sonucu olarak tanımlanır — belirli bir servis sayısını geçen herhangi bir sistemin kaçınılmaz kaderi ya da yalnızca çoklu-dil (polyglot) kurulumlarla sınırlı bir şey değil, kasıtlı tasarımla aktif olarak yönetilmesi gereken gerçek bir risktir.
 
-**13. Doğru cevap: B.**
+**13. Doğru cevap: A.**
 Microservices dağıtık olduğu için, sistem davranışını tam olarak doğrulamak genelde tüm production dağıtımını modellemeyi gerektirir — bu, tüm bileşenlerin aynı process içinde birlikte çalıştığı ve bir bütün olarak daha doğrudan test edilebildiği bir monolith'ten temelde farklıdır.
 
-**14. Doğru cevap: B.**
+**14. Doğru cevap: C.**
 Her microservice'in kendi ayrı loglarını üretmesi, tam olarak birçok servise yayılan bir isteği izlemenin, her şeyin tek bir yerde daha doğal biçimde görünür olduğu tek bir monolitik process'i debug etmekten neden daha zor olduğunun nedenidir — bu, dağıtık mimarinin doğrudan bir sonucudur, bir araç bütçesi sorunu değil.
 
-**15. Doğru cevap: C.**
-Modülün kendi sonucu, microservices'in faydalarının genelde zorluklardan ağır bastığı, ama koşullu olarak — yalnızca otomasyona ve operasyonel mükemmelliğe gerçek bir bağlılıkla. İki uç noktayı da (A: monolithler kesinlikle üstündür, ya da B: microservices'in hiçbir dezavantajı yoktur) sunmak bu koşullu çerçeveyi yanlış yansıtır.
+**15. Doğru cevap: B.**
+Modülün kendi sonucu, microservices'in faydalarının genelde zorluklardan ağır bastığı, ama koşullu olarak — yalnızca otomasyona ve operasyonel mükemmelliğe gerçek bir bağlılıkla. İki uç noktayı da (A: monolithler kesinlikle üstündür, ya da C: microservices'in hiçbir dezavantajı yoktur) sunmak bu koşullu çerçeveyi yanlış yansıtır.
