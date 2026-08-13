@@ -248,6 +248,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 
 ---
 
+### Cold Start (Serverless)
+
+**Definition:** The latency incurred when a serverless platform creates and initializes a fresh execution environment for a function or container instance — including loading its imported dependencies — before it can handle its first request.
+
+**Why it exists:** Serverless platforms don't keep every possible instance running all the time; when no warm instance is available to serve a request, one has to be built from scratch first, and that setup work is not free.
+
+**Related services:** Cloud Run Functions, Cloud Run, App Engine.
+
+**Common misconceptions:** A cold start isn't just about the platform — code choices matter too: unused imported dependencies, and eagerly initializing global variables that aren't needed on every code path, both add avoidable cold-start latency. Setting a minimum instance count eliminates cold starts for that baseline load entirely, rather than merely making them faster.
+
+**Real-world analogy:** A cold start is like opening a shop that's been closed overnight — you have to unlock the doors, turn on the lights, and boot the registers before the first customer of the day can be served; a shop that never closes skips all of that for every customer.
+
+---
+
 ### Cloud Build
 
 **Definition:** A fully managed service for building Docker container images from source code or configuration, and pushing them to Artifact Registry.
@@ -945,6 +959,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 **Common misconceptions:** You never grant a permission directly to a user — you always grant a **role**, which is a bundle of permissions in the form `service.resource.verb`. Policies are inherited **downward** through the resource hierarchy.
 
 **Real-world analogy:** IAM is a building's access-badge system: badges (roles) are assigned to people (principals), and unlock specific doors (resources) — nobody gets a key to one door directly.
+
+---
+
+### Idempotency
+
+**Definition:** A property of an operation where performing it multiple times produces the same result as performing it once — repeating the call doesn't create duplicate side effects.
+
+**Why it exists:** Distributed systems fail partway through and retry as a matter of course; a non-idempotent operation makes retries dangerous (a payment charged twice, a record inserted twice), so idempotency is what makes "just retry it" a safe default response to failure.
+
+**Related services:** Cloud Run Functions, Pub/Sub, Cloud Tasks.
+
+**Common misconceptions:** Idempotency is not the same as being side-effect-free — an idempotent operation can absolutely write data, it just needs to converge to the same end state no matter how many times it's applied (e.g., "set balance to $50" is idempotent; "add $50 to balance" is not).
+
+**Real-world analogy:** An idempotent operation is like an elevator call button — pressing it once or ten times still just calls one elevator; it doesn't order a new elevator for every press.
 
 ---
 

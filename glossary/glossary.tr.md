@@ -246,6 +246,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 
 ---
 
+### Cold Start (Serverless)
+
+**Tanım:** Bir serverless platformun, bir function ya da container instance'ı için — import edilen dependency'lerin yüklenmesi dahil — taze bir execution environment oluşturup initialize etmesi sırasında oluşan, ilk isteği işleyebilmeden önceki gecikme.
+
+**Neden var:** Serverless platformlar, olası her instance'ı sürekli çalışır durumda tutmaz; bir isteğe hizmet verecek warm bir instance mevcut olmadığında, önce sıfırdan biri inşa edilmelidir, ve bu kurulum işi bedelsiz değildir.
+
+**İlgili servisler:** Cloud Run Functions, Cloud Run, App Engine.
+
+**Yaygın yanlış anlamalar:** Bir cold start yalnızca platformla ilgili değildir — kod tercihleri de önemlidir: kullanılmayan import edilmiş dependency'ler, ve her kod yolunda ihtiyaç duyulmayan global değişkenlerin eagerly initialize edilmesi, ikisi de önlenebilir cold-start gecikmesi ekler. Bir minimum instance sayısı belirlemek, o baseline yük için cold start'ları yalnızca hızlandırmaz, tamamen ortadan kaldırır.
+
+**Gerçek dünya benzetmesi:** Bir cold start, gece boyunca kapalı kalmış bir dükkânı açmak gibidir — günün ilk müşterisine hizmet verilebilmeden önce kapıları açmanız, ışıkları yakmanız, ve kasaları çalıştırmanız gerekir; hiç kapanmayan bir dükkân, her müşteri için bunların hiçbirini yapmaz.
+
+---
+
 ### Cloud Build
 
 **Tanım:** Kaynak koddan ya da yapılandırmadan Docker container imajları inşa eden ve bunları Artifact Registry'ye gönderen, tam yönetilen bir servis.
@@ -943,6 +957,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 **Yaygın yanlış anlamalar:** Bir izni asla doğrudan bir kullanıcıya vermezsin — her zaman `service.resource.verb` biçiminde izinlerin bir paketi olan bir **rol** verirsin. Politikalar, kaynak hiyerarşisi boyunca **aşağı doğru** miras alınır.
 
 **Gerçek dünya benzetmesi:** IAM, bir binanın erişim rozeti sistemidir: rozetler (roller) insanlara (principal'lara) atanır ve belirli kapıları (kaynakları) açar — kimse doğrudan tek bir kapının anahtarını almaz.
+
+---
+
+### Idempotency
+
+**Tanım:** Bir işlemin, birden fazla kez gerçekleştirilmesinin, bir kez gerçekleştirilmesiyle aynı sonucu üretmesi özelliği — çağrıyı tekrarlamak, tekrarlanan yan etkiler yaratmaz.
+
+**Neden var:** Dağıtık sistemler yarıda başarısız olur ve olağan bir şekilde retry edilir; idempotent olmayan bir işlem, retry'ları tehlikeli kılar (iki kez ücretlendirilen bir ödeme, iki kez eklenen bir kayıt), bu yüzden idempotency, "sadece tekrar dene"yi bir başarısızlığa karşı güvenli bir varsayılan tepki hâline getiren şeydir.
+
+**İlgili servisler:** Cloud Run Functions, Pub/Sub, Cloud Tasks.
+
+**Yaygın yanlış anlamalar:** Idempotency, yan etkisiz olmakla aynı şey değildir — idempotent bir işlem kesinlikle veri yazabilir, yalnızca kaç kez uygulanırsa uygulansın aynı son duruma yakınsaması gerekir (örneğin "bakiyeyi 50$ olarak ayarla" idempotent'tir; "bakiyeye 50$ ekle" değildir).
+
+**Gerçek dünya benzetmesi:** Idempotent bir işlem, bir asansör çağırma düğmesi gibidir — bir kere ya da on kere basmak yine de yalnızca bir asansör çağırır; her basış için yeni bir asansör sipariş etmez.
 
 ---
 
