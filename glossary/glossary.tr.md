@@ -638,6 +638,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 
 ---
 
+### Customer-Managed Encryption Keys (CMEK)
+
+**Tanım:** Cloud KMS aracılığıyla yönetilen, (Google-managed key'lerin aksine) müşterinin sahip olduğu ve kontrol ettiği, bir kaynağın at-rest verisini korumak için kullanılan encryption key'ler — Cloud Run functions için bunlar, function'ın source code'unu, build sonuçlarını (container image ve deploy edilen instance'lar) ve internal event transport channel verisini kapsar.
+
+**Neden var:** Varsayılan encryption, tamamen Google tarafından yönetilen key'ler kullanır; CMEK, müşteriye key'in yaşam döngüsü üzerinde — onu devre dışı bırakma ya da yok etme yeteneği dahil — doğrudan kontrol verir, böylece korunan veriyi nihayetinde kimin okuyabileceğine platform değil müşteri karar verir.
+
+**İlgili servisler:** Cloud KMS, Cloud Run Functions, Artifact Registry, Cloud Storage, IAM (Identity and Access Management).
+
+**Yaygın yanlış anlamalar:** Bir CMEK key'ini devre dışı bırakmak ya da yok etmek, hâlihazırda çalışan işi anında durdurmaz — aktif function instance'ları çalışmaya devam eder ve devam eden execution'lar tamamlanır, ama key erişilemez hale geldikten sonra yeni execution'lar ve yeni bir instance gerektiren herhangi bir execution başarısız olur. Cloud Run functions ayrıca her zaman bir key'in yalnızca primary versiyonunu kullanır; CMEK korumasını belirli bir key versiyonuna sabitleyemezsiniz.
+
+**Gerçek dünya benzetmesi:** CMEK, yalnızca sizin ana anahtarı elinizde tuttuğunuz bir kiralık kasa gibidir — banka (Google) kasayı saklar ve binanın güvenliğini yönetir, ama anahtarınızı geri alırsanız, banka bile onu açamaz.
+
+---
+
 ### Deny Policy
 
 **Tanım:** Belirli principal'ların, kendilerine verilen rollerden bağımsız olarak belirli izinleri kullanmasını açıkça engelleyen bir IAM kuralı.
@@ -1615,6 +1629,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 **Yaygın yanlış anlamalar:** Bunlar farklı sorunları çözer — Peering iki bağımsız ağı eşit olarak bağlar; Shared VPC, başka projelerin ödünç aldığı tek bir ağı, IAM kontrolü altında merkezileştirir.
 
 **Gerçek dünya benzetmesi:** VPC Peering, iki komşu apartmanın sakinlerinin birbirinin avlusunu kullanmasına izin vermeyi kabul etmesi gibidir. Shared VPC, birkaç binanın hepsinin tek bir paylaşılan bina yöneticisinin altyapısına bağlanması gibidir.
+
+---
+
+### VPC Service Controls
+
+**Tanım:** Bir ya da daha fazla Google Cloud projesinin etrafına çizilen, **service perimeter** adı verilen bir güvenlik sınırı; içindeki servislere hangi network yollarının ve API çağrılarının ulaşmasına izin verildiğini kısıtlamak için kullanılır — örneğin, Cloud Run functions'ı yalnızca perimeter içinden gelen trafiği kabul etmeye ve tüm egress'i bir VPC network üzerinden yönlendirmeye zorlamak gibi.
+
+**Neden var:** IAM tek başına *kimin* bir servisi çağırabileceğini kontrol eder, ama *çağrının nereden gelmesine izin verildiğini* kontrol etmez; VPC Service Controls, geçerli, meşru credential'lara sahip bir caller'dan bile kaynaklanabilecek veri sızdırma risklerini azaltan bu eksik boyutu ekler.
+
+**İlgili servisler:** VPC (Virtual Private Cloud), Serverless VPC Access, Cloud Run Functions, Organization Node, IAM.
+
+**Yaygın yanlış anlamalar:** Bir service perimeter, yalnızca bir proje üzerindeki bir firewall kuralı değildir — Shared VPC kurulumları için, hem host hem service projelerinin perimeter'a eklenmesi gerekir, ve kısıtlamalar function'ın kendi IAM yapılandırması üzerinden değil, organization policy'ler aracılığıyla uygulanır.
+
+**Gerçek dünya benzetmesi:** VPC Service Controls, yalnızca bir ofis kapısındaki bir kilit değil, tüm bir kampüsü çevreleyen bir güvenlik kontrol noktası gibidir — geçerli bir kartı olan biri bile, kampüse özel malzemeyi belirlenmiş kontrol noktası olmayan bir yan kapıdan dışarı çıkaramaz.
 
 ---
 

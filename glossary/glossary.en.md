@@ -640,6 +640,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 
 ---
 
+### Customer-Managed Encryption Keys (CMEK)
+
+**Definition:** Encryption keys, managed through Cloud KMS, that a customer owns and controls (as opposed to Google-managed keys) and uses to protect a resource's data at rest — for Cloud Run functions, this covers the function's source code, its build results (container image and deployed instances), and internal event transport channel data.
+
+**Why it exists:** Default encryption uses keys Google manages entirely; CMEK gives the customer direct control over the key's lifecycle — including the ability to disable or destroy it — so the customer, not the platform, decides who can ultimately read the protected data.
+
+**Related services:** Cloud KMS, Cloud Run Functions, Artifact Registry, Cloud Storage, IAM (Identity and Access Management).
+
+**Common misconceptions:** Disabling or destroying a CMEK key doesn't instantly stop already-running work — active function instances keep running and in-progress executions finish, but new executions and any execution requiring a new instance fail once the key is inaccessible. Cloud Run functions also only ever uses a key's primary version; you cannot pin CMEK protection to a specific key version.
+
+**Real-world analogy:** CMEK is like a safe-deposit box where only you hold the master key — the bank (Google) stores the box and handles the building's security, but if you take your key away, not even the bank can open it.
+
+---
+
 ### Deny Policy
 
 **Definition:** An IAM rule that explicitly blocks specific principals from using specific permissions, regardless of any roles granted to them.
@@ -1617,6 +1631,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 **Common misconceptions:** These solve different problems — Peering connects two independent networks as equals; Shared VPC centralizes one network that other projects borrow, under IAM control.
 
 **Real-world analogy:** VPC Peering is like two neighboring apartment buildings agreeing to let residents use each other's courtyard. Shared VPC is like several buildings all connecting to one shared building manager's utilities.
+
+---
+
+### VPC Service Controls
+
+**Definition:** A security boundary, called a **service perimeter**, drawn around one or more Google Cloud projects, used to restrict which network paths and API calls are allowed to reach the services inside it — for example, forcing Cloud Run functions to only accept traffic from within the perimeter and to route all egress through a VPC network.
+
+**Why it exists:** IAM alone controls *who* can call a service, but not *where the call is allowed to come from*; VPC Service Controls adds that missing dimension, mitigating data exfiltration risks even from a caller with valid, legitimate credentials.
+
+**Related services:** VPC (Virtual Private Cloud), Serverless VPC Access, Cloud Run Functions, Organization Node, IAM.
+
+**Common misconceptions:** A service perimeter isn't just a firewall rule on one project — for Shared VPC setups, both the host and service projects must be added to the perimeter, and the restrictions are enforced through organization policies, not through the function's own IAM configuration.
+
+**Real-world analogy:** VPC Service Controls is like a security checkpoint around an entire campus, not just a lock on one office door — even someone with a valid badge can't bring campus-restricted material out through a side gate that isn't the designated checkpoint.
 
 ---
 
