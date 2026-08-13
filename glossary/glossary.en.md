@@ -178,6 +178,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 
 ---
 
+### BigQuery Remote Functions
+
+**Definition:** A mechanism that lets a Google Standard SQL query in BigQuery invoke a Cloud Run function directly, via a `CLOUD_RESOURCE` connection — passing query values in as arguments and receiving the function's return value back into the result set.
+
+**Why it exists:** SQL is built for querying data, not for arbitrary computation; remote functions close that gap, letting a query call out to custom logic, an external API, or anything else expressible as an HTTP function, without exporting data out of BigQuery first.
+
+**Related services:** BigQuery, Cloud Run Functions, IAM (Identity and Access Management).
+
+**Common misconceptions:** The IAM role granted to the connection's service account depends on the function's generation — Cloud Functions Invoker for 1st gen, Cloud Run Invoker for 2nd gen — it isn't a single universal role. Running a query that uses the remote function also requires the caller to separately hold `roles/bigquery.dataViewer` on the dataset and `roles/bigquery.connectionUser` on the connection.
+
+**Real-world analogy:** A BigQuery remote function is like a phone line built into a spreadsheet cell — instead of the cell only doing arithmetic on its own contents, it can dial out to someone else's calculator and bring the answer back.
+
+---
+
 ### Bigtable
 
 **Definition:** A high-performance NoSQL database for huge, sparsely populated tables, offering sub-10ms key-value lookups at massive scale.
@@ -707,6 +721,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 **Common misconceptions:** The ESB doesn't eliminate integration complexity, it relocates it — SOA reduced complexity in individual services, but that complexity resurfaced as ESB integration work, typically owned by one central team, which became a bottleneck for shipping changes across every application.
 
 **Real-world analogy:** An ESB is like a single, centrally-run switchboard that every phone call in a large office must be routed through — efficient in theory, but every wiring change requires going through the switchboard operator, and any mistake there can drop calls for everyone.
+
+---
+
+### Environment Variables (Cloud Run Functions)
+
+**Definition:** Key-value pairs set for a Cloud Run function at deployment time, stored in the Cloud Run functions backend, bound to a single function, and readable by the function's code at runtime or used as buildpack configuration.
+
+**Why it exists:** Environment-specific values — a cache host, a feature flag, a region — need to change between deployments without touching the function's source code; environment variables separate that configuration from the code that reads it.
+
+**Related services:** Cloud Run Functions, Secret Manager, Memorystore.
+
+**Common misconceptions:** Environment variables are not a substitute for Secret Manager when the value is sensitive — they can be set via the gcloud CLI, the console, or a YAML file kept in source control, but none of those paths give the access control, versioning, or audit trail a secret gets. They also exist only for the lifecycle of the single function they're bound to, not shared globally across a project.
+
+**Real-world analogy:** Environment variables are like a note handed to a function at the moment it's deployed — the function's code never changes, but the note in its hand ("the cache is at this address") can read differently on every deploy.
 
 ---
 

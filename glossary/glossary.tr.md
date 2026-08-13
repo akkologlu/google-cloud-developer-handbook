@@ -176,6 +176,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 
 ---
 
+### BigQuery Remote Functions
+
+**Tanım:** BigQuery'deki bir Google Standard SQL sorgusunun, bir `CLOUD_RESOURCE` connection aracılığıyla doğrudan bir Cloud Run function'ı invoke etmesini sağlayan bir mekanizma — query değerlerini argüman olarak geçirir ve function'ın return değerini result set'e geri alır.
+
+**Neden var:** SQL, veri sorgulamak için tasarlanmıştır, keyfi hesaplama için değil; remote function'lar bu boşluğu kapatır, bir sorgunun, veriyi önce BigQuery'den dışarı aktarmadan, custom bir mantığa, harici bir API'ye ya da bir HTTP function olarak ifade edilebilen herhangi bir şeye ulaşmasını sağlar.
+
+**İlgili servisler:** BigQuery, Cloud Run Functions, IAM (Identity and Access Management).
+
+**Yaygın yanlış anlamalar:** Connection'ın service account'una verilen IAM rolü, function'ın nesline bağlıdır — 1st gen için Cloud Functions Invoker, 2nd gen için Cloud Run Invoker — tek, evrensel bir rol değildir. Remote function'ı kullanan bir sorguyu çalıştırmak, ayrıca caller'ın dataset üzerinde `roles/bigquery.dataViewer`'a ve connection üzerinde `roles/bigquery.connectionUser`'a ayrı ayrı sahip olmasını gerektirir.
+
+**Gerçek dünya benzetmesi:** Bir BigQuery remote function, bir tablo hücresine yerleştirilmiş bir telefon hattı gibidir — hücre yalnızca kendi içeriği üzerinde aritmetik yapmak yerine, başka birinin hesap makinesini arayıp cevabı geri getirebilir.
+
+---
+
 ### Bigtable
 
 **Tanım:** Devasa, seyrek doldurulmuş tablolar için, muazzam ölçekte sub-10ms key-value aramaları sunan yüksek performanslı bir NoSQL veritabanı.
@@ -705,6 +719,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 **Yaygın yanlış anlamalar:** ESB entegrasyon karmaşıklığını ortadan kaldırmaz, sadece taşır — SOA, tekil servislerdeki karmaşıklığı azalttı, ama bu karmaşıklık genelde tek bir merkezi takımın sahip olduğu ESB entegrasyon işi olarak yeniden ortaya çıktı ve her uygulama genelinde değişiklik göndermenin darboğazı haline geldi.
 
 **Gerçek dünya benzetmesi:** Bir ESB, büyük bir ofisteki her telefon çağrısının üzerinden geçmesi gereken, merkezi olarak yönetilen tek bir santral gibidir — teoride verimlidir, ama her kablolama değişikliği santral operatöründen geçmeyi gerektirir ve oradaki herhangi bir hata herkes için çağrıları düşürebilir.
+
+---
+
+### Environment Variables (Cloud Run Functions)
+
+**Tanım:** Bir Cloud Run function için deployment zamanında ayarlanan, Cloud Run functions backend'inde saklanan, tek bir function'a bağlı olan, ve function'ın kodu tarafından runtime'da okunabilen ya da buildpack yapılandırması olarak kullanılabilen key-value çiftleri.
+
+**Neden var:** Ortama özgü değerlerin — bir cache host'u, bir feature flag, bir region — function'ın source code'una dokunmadan deployment'lar arasında değişmesi gerekir; environment variable'lar bu yapılandırmayı, onu okuyan koddan ayırır.
+
+**İlgili servisler:** Cloud Run Functions, Secret Manager, Memorystore.
+
+**Yaygın yanlış anlamalar:** Environment variable'lar, değer hassas olduğunda Secret Manager'ın yerine geçmez — gcloud CLI, console, ya da source control'de tutulan bir YAML dosyası aracılığıyla ayarlanabilirler, ama bu yolların hiçbiri bir secret'ın sahip olduğu erişim kontrolünü, versiyonlamayı ya da audit trail'i sağlamaz. Ayrıca yalnızca bağlı oldukları tek function'ın lifecycle'ı boyunca var olurlar, bir proje genelinde global olarak paylaşılmazlar.
+
+**Gerçek dünya benzetmesi:** Environment variable'lar, bir function'a deploy edildiği anda tutuşturulan bir not kağıdı gibidir — function'ın kodu asla değişmez, ama elindeki not ("cache şu adreste") her deploy'da farklı okunabilir.
 
 ---
 
