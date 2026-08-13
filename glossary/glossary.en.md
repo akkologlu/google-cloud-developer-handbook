@@ -1382,6 +1382,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 
 ---
 
+### Serverless VPC Access
+
+**Definition:** A mechanism that connects Cloud Run functions (and other serverless products) directly to a VPC network, so they can reach resources with only an internal IP address — such as Compute Engine VM instances and Memorystore — over internal DNS and internal IP addresses.
+
+**Why it exists:** Serverless products run outside your VPC network by default; without Serverless VPC Access, the only way to reach an internal-IP-only backend would be to expose it publicly, which defeats the purpose of keeping it internal.
+
+**Related services:** Cloud Run Functions, VPC (Virtual Private Cloud), VPC Peering and Shared VPC, Compute Engine, Memorystore.
+
+**Common misconceptions:** A connector isn't automatically usable once created — each function that needs it must be individually configured to use it, and the connector's region must match the function's deployment region, or connectivity silently fails. A connector also needs a subnet or CIDR range dedicated exclusively to its own use.
+
+**Real-world analogy:** Serverless VPC Access is a private, dedicated hallway built between a building you don't control (the serverless environment) and a secured building you do (your VPC network) — traffic walks through the hallway instead of going out to the street and back in through a side door.
+
+---
+
 ### Service (Kubernetes)
 
 **Definition:** A Kubernetes abstraction that gives a set of Pods a stable network endpoint (fixed IP), so clients don't need to track individual Pods' changing IPs.
@@ -1533,6 +1547,20 @@ This is a reference, not a tutorial — for the full teaching context behind any
 **Common misconceptions:** "Dynamic" is the key word — this isn't about pre-translating a fixed set of pages, it's about translating content the moment a user requests it.
 
 **Real-world analogy:** Translation AI is a live interpreter standing beside you, translating in real time, rather than a phrasebook you consult in advance.
+
+---
+
+### Trigger (Cloud Run Functions)
+
+**Definition:** The configuration, specified at deployment time, that determines how and when a Cloud Run function is invoked — either an HTTP trigger (reacting to HTTP(S) requests) or an event trigger (reacting to an event from a supported source such as Pub/Sub, Cloud Storage, Firestore, or Firebase, all delivered via Eventarc).
+
+**Why it exists:** A function needs a well-defined way to know when it should run; triggers separate "what invokes the function" from the function's own code, so the same function logic can, in principle, be wired up to different invocation sources.
+
+**Related services:** Eventarc, CloudEvents, Cloud Run Functions, Pub/Sub, Firestore.
+
+**Common misconceptions:** A single function can be bound to only one trigger at a time — you cannot attach multiple triggers to it. Fanning a single event out to several functions is achieved differently: by deploying multiple functions that share the same trigger source settings, not by giving one function several triggers.
+
+**Real-world analogy:** A trigger is like a single doorbell wired to one specific button — you can wire several doorbells to the same button (multiple functions, one trigger source), but a single doorbell can't be wired to ring from two different buttons at once (one function, one trigger).
 
 ---
 

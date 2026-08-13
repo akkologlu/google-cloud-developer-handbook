@@ -1380,6 +1380,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 
 ---
 
+### Serverless VPC Access
+
+**Tanım:** Cloud Run functions'ı (ve diğer serverless ürünlerini) doğrudan bir VPC network'e bağlayan, böylece Compute Engine VM instance'ları ve Memorystore gibi yalnızca internal IP address'i olan kaynaklara internal DNS ve internal IP address'ler üzerinden erişilmesini sağlayan bir mekanizma.
+
+**Neden var:** Serverless ürünler varsayılan olarak VPC network'ünüzün dışında çalışır; Serverless VPC Access olmadan, yalnızca internal IP'si olan bir backend'e erişmenin tek yolu onu public olarak açığa çıkarmak olurdu, ki bu da onu internal tutmanın amacını ortadan kaldırır.
+
+**İlgili servisler:** Cloud Run Functions, VPC (Virtual Private Cloud), VPC Peering and Shared VPC, Compute Engine, Memorystore.
+
+**Yaygın yanlış anlamalar:** Bir connector, oluşturulur oluşturulmaz otomatik olarak kullanılabilir hale gelmez — ona ihtiyaç duyan her function'ın onu kullanacak şekilde ayrı ayrı yapılandırılması gerekir, ve connector'ın region'ı function'ın deployment region'ıyla eşleşmelidir, aksi halde bağlantı sessizce başarısız olur. Bir connector'ın ayrıca yalnızca kendi kullanımına ayrılmış bir subnet'e ya da CIDR range'e ihtiyacı vardır.
+
+**Gerçek dünya benzetmesi:** Serverless VPC Access, kontrol etmediğiniz bir bina (serverless ortam) ile kontrol ettiğiniz güvenli bir bina (VPC network'ünüz) arasında inşa edilmiş, özel, ayrılmış bir koridordur — trafik, sokağa çıkıp yan kapıdan tekrar girmek yerine bu koridordan yürür.
+
+---
+
 ### Service (Kubernetes)
 
 **Tanım:** Bir grup Pod'a kararlı bir ağ uç noktası (sabit IP) veren Kubernetes soyutlaması; böylece istemcilerin tek tek Pod'ların değişen IP'lerini takip etmesi gerekmez.
@@ -1531,6 +1545,20 @@ Bu sözlük, `glossary.en.md` ile **girdi girdi eşleşir** — aynı terimler, 
 **Yaygın yanlış anlamalar:** "Dinamik" burada anahtar kelimedir — bu, sabit bir sayfa setini önceden çevirmekle ilgili değildir, içeriği kullanıcı istediği an çevirmekle ilgilidir.
 
 **Gerçek dünya benzetmesi:** Translation AI, önceden danıştığın bir konuşma kılavuzu yerine yanında duran, gerçek zamanlı çeviri yapan canlı bir tercümandır.
+
+---
+
+### Trigger (Cloud Run Functions)
+
+**Tanım:** Deployment anında belirtilen, bir Cloud Run function'ının nasıl ve ne zaman invoke edileceğini belirleyen yapılandırma — ya bir HTTP trigger (HTTP(S) isteklerine tepki verir) ya da bir event trigger (Pub/Sub, Cloud Storage, Firestore ya da Firebase gibi desteklenen bir kaynaktan gelen, hepsi Eventarc aracılığıyla teslim edilen bir event'e tepki verir).
+
+**Neden var:** Bir function'ın ne zaman çalışması gerektiğini bilmesinin iyi tanımlanmış bir yola ihtiyacı vardır; trigger'lar, "function'ı ne invoke eder" sorusunu function'ın kendi kodundan ayırır, böylece aynı function mantığı prensipte farklı invocation kaynaklarına bağlanabilir.
+
+**İlgili servisler:** Eventarc, CloudEvents, Cloud Run Functions, Pub/Sub, Firestore.
+
+**Yaygın yanlış anlamalar:** Tek bir function aynı anda yalnızca bir trigger'a bağlanabilir — ona birden fazla trigger bağlayamazsınız. Tek bir event'i birkaç function'a fan-out etmek farklı şekilde başarılır: aynı trigger source ayarlarını paylaşan birden fazla function deploy ederek, bir function'a birkaç trigger vererek değil.
+
+**Gerçek dünya benzetmesi:** Bir trigger, tek bir spesifik düğmeye bağlı tek bir kapı zilidir — aynı düğmeye birkaç kapı zili bağlayabilirsiniz (bir trigger source, birden fazla function), ama tek bir kapı zili aynı anda iki farklı düğmeden çalacak şekilde bağlanamaz (bir function, bir trigger).
 
 ---
 
